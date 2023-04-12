@@ -98,7 +98,7 @@ namespace MineSweeper {
 				MineButton^ button = mineField->GetButton(i, j);
 				button->Size = System::Drawing::Size(buttonSize, buttonSize);
 				button->Location = Point(padding + j * (buttonSize + padding), padding + i * (buttonSize + padding));
-				//button->Click += gcnew EventHandler(this, &MyForm::Button_Click);
+				button->MouseDown += gcnew MouseEventHandler(this, &MyForm::Button_Click);
 				this->Controls->Add(button);
 			}
 		}
@@ -128,45 +128,110 @@ namespace MineSweeper {
 	{
 		DeleteMatrixOfButtons();
 	}
+	void MyForm::Button_Click(Object^ sender, MouseEventArgs^ e)
+	{
+		MineButton^ clickedButton = safe_cast<MineButton^>(sender); //stolen from chatgpt
+
+		if (e->Button == System::Windows::Forms::MouseButtons::Left)
+		{
+			LeftClickAction(clickedButton);
+		}
+		else if (e->Button == System::Windows::Forms::MouseButtons::Right)
+		{
+			RightClickAction(clickedButton);
+		}
+	}
+
 
 
 	void MyForm::LeftClickAction(MineButton^ clickedButton)
 	{
 		if (clickedButton->IsFlagged || clickedButton->IsRevealed)
 		{
-        // Ignore clicks on flagged or already revealed buttons
 			 return;
 		}
 
 	    if (clickedButton->IsMine)
 		{
-        // End the game if a bomb is clicked
 			EndGame(false);
 		}
 		else
 		{
-        // Reveal the button and its nearby empty spaces
 			RevealButton(clickedButton);
 		}
 }
 
 	void MyForm::RightClickAction(MineButton^ clickedButton)
 	{
-    // Toggle the flag on or off
 		clickedButton->IsFlagged = !clickedButton->IsFlagged;
 
 	    if (clickedButton->IsFlagged)
 		{
-        // Show flag icon or change the button text to "F" to indicate a flag
 			clickedButton->Text = "F";
 		}
 		else
 		{
-        // Hide flag icon or clear the button text
 			clickedButton->Text = "";
 		}
 	}
 
+	void MyForm::EndGame(bool isWin)
+	{
+		if (isWin)
+		{
+			MessageBox::Show("Congratulations! You won the game!", "Minesweeper", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		}
+		else
+		{
+			MessageBox::Show("You clicked on a bomb! Game over.", "Minesweeper", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		}
+		for (int i = 0; i < mineField->NumRows; ++i)
+		{
+			for (int j = 0; j < mineField->NumCols; ++j)
+			{
+				MineButton^ button = mineField->GetButton(i, j);
+				if (button->IsMine)
+				{
+					button->Text = "B";
+				}
+			}
+		}
+	}
+
+	void MyForm::RevealButton(MineButton^ button)
+	{
+		if (button->IsFlagged || button->IsRevealed)
+		{
+			return;
+		}
+
+		button->IsRevealed = true;
+		button->Enabled = false;
+		button->BackColor = Color::LightGray;
+
+		if (button->AdjacentMines > 0)
+		{
+			button->Text = button->AdjacentMines.ToString();
+		}
+		else
+		{
+			for (int i = -1; i <= 1; ++i)
+			{
+				for (int j = -1; j <= 1; ++j)
+				{
+					if (i == 0 && j == 0) continue;
+
+					int newRow = button->Row + i;
+					int newCol = button->Col + j;
+
+					if (newRow >= 0 && newRow < mineField->NumRows && newCol >= 0 && newCol < mineField->NumCols)
+					{
+						RevealButton(mineField->GetButton(newRow, newCol));
+					}
+				}
+			}
+		}
+	}
 
 	};
 }
