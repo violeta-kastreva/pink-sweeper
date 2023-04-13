@@ -42,8 +42,7 @@ namespace MineSweeper {
 			InitializeTimer();
 			gameStats = gcnew GameStatistics();
 			gameStats->LoadFromFile(); 
-			UpdateStatisticLabels(gameStats);
-			
+			UpdateStatisticLabels(gameStats);		
 		
 
 		}
@@ -92,9 +91,6 @@ namespace MineSweeper {
 		{
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MyForm::typeid));
 			this->SuspendLayout();
-			// 
-			// MyForm
-			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(984, 761);
@@ -247,6 +243,7 @@ namespace MineSweeper {
 
 			   if (clickedButton->IsMine)
 			   {
+				   gameStats->gamesPlayed++;
 				   EndGame(false);
 			   }
 			   else
@@ -254,6 +251,8 @@ namespace MineSweeper {
 				   RevealButton(clickedButton);
 
 				   if (CheckWin()) {
+					   gameStats->gamesPlayed++;
+					   gameStats->gamesWon++;
 					   EndGame(true);
 				   }				
 
@@ -283,10 +282,30 @@ namespace MineSweeper {
 			   if (isWin)
 			   {
 				   MessageBox::Show("Congratulations! You won the game!", "Pinksweeper", MessageBoxButtons::OK, MessageBoxIcon::None);
+				   if(gameStats->winStreak)
+				   {
+					   gameStats->currentStreak++;
+					   if (gameStats->longestWinStreak < gameStats->currentStreak) gameStats->longestWinStreak = gameStats->currentStreak;
+				   }
+				   else 
+				   {
+					   gameStats->winStreak = true;
+					   gameStats->currentStreak = 0;
+				   }
 			   }
 			   else
 			   {
 				   MessageBox::Show("You clicked on a bomb! Game over.", "Pinksweeper", MessageBoxButtons::OK, MessageBoxIcon::None);
+				   if (!gameStats->winStreak)
+				   {
+					   gameStats->currentStreak++;
+					   if (gameStats->longestLoseStreak < gameStats->currentStreak) gameStats->longestLoseStreak = gameStats->currentStreak;
+				   }
+				   else
+				   {
+					   gameStats->winStreak = false;
+					   gameStats->currentStreak = 0;
+				   }
 			   }
 			   for (int i = 0; i < mineField->GetNumRows(); ++i)
 			   {
@@ -299,6 +318,10 @@ namespace MineSweeper {
 					   }
 				   }
 			   }
+			   gameStats->winPercentage = (double) gameStats->gamesWon / gameStats->gamesPlayed * 100;
+			   UpdateStatisticLabels(gameStats);
+			   SaveStatistics(gameStats);
+
 		   }
 
 		   void MyForm::RevealButton(MineButton^ button)
@@ -611,7 +634,7 @@ namespace MineSweeper {
 				lblBestTime->Text = "Best Time: " + stats->bestTime + "s";
 				lblGamesPlayed->Text = "Games Played: " + stats->gamesPlayed;
 				lblGamesWon->Text = "Games Won: " + stats->gamesWon;
-				lblWinPercentage->Text = "Win Percentage: " + stats->winPercentage.ToString("P");
+				lblWinPercentage->Text = "Win Percentage: " + Math::Round(stats->winPercentage, 0).ToString() + "%";
 				lblLongestWinStreak->Text = "Longest Win Streak: " + stats->longestWinStreak;
 				lblLongestLoseStreak->Text = "Longest Lose Streak: " + stats->longestLoseStreak;
 				lblCurrentStreak->Text = "Current Streak: " + stats->currentStreak;

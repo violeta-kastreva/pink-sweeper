@@ -3,13 +3,14 @@ using namespace System;
 
 public ref class GameStatistics {
 public:
-    int bestTime;
-    int gamesPlayed;
-    int gamesWon;
-    double winPercentage;
-    int longestWinStreak;
-    int longestLoseStreak;
-    int currentStreak;
+    int bestTime = -1;
+    int gamesPlayed = 0;
+    int gamesWon = 0;
+    double winPercentage = 0;
+    int longestWinStreak = 0;
+    int longestLoseStreak = 0;
+    int currentStreak = 0;
+    bool winStreak = false;
 
     void LoadFromFile()
     {
