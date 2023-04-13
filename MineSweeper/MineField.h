@@ -1,104 +1,94 @@
 #pragma once
 #include "MineButton.h"
 
-
 using namespace System;
 using namespace System::Collections::Generic;
+using namespace System::Windows::Forms;
 
-
+ref class MineButton;
 
 public ref class MineField
 {
-
-private:
-    int numRows;
-    int numCols;
-    int numMines;
-    array<MineButton^, 2>^ buttons;
-    Random^ random;
-
 public:
-    MineField(int numRows, int numCols, int numMines)
+#include "MineButton.h"
+#include "MineField.h"
+
+    MineField(int numRows, int numCols, int numBombs)
+        : NumRows(numRows), NumCols(numCols), NumBombs(numBombs)
     {
-        this->numRows = numRows;
-        this->numCols = numCols;
-        this->numMines = numMines;
-        this->random = gcnew Random();
-        buttons = gcnew array<MineButton^, 2>(numRows, numCols);
-    }
-
-    void InitializeField()
-    {
-        for (int i = 0; i < numRows; ++i)
-        {
-            for (int j = 0; j < numCols; ++j)
-            {
-                buttons[i, j] = gcnew MineButton(i, j);
-            }
-        }
-
-        for (int i = 0; i < numMines; ++i)
-        {
-            int row = random->Next(numRows);
-            int col = random->Next(numCols);
-
-            if (buttons[row, col]->IsMine)
-            {
-                --i;
-            }
-            else
-            {
-                buttons[row, col]->IsMine = true;
-            }
-        }
+        buttons = gcnew array<array<MineButton^>^>(numRows);
+        adjacentMineCounts = gcnew array<array<int>^>(numRows);
 
         for (int i = 0; i < numRows; ++i)
         {
-            for (int j = 0; j < numCols; ++j)
-            {
-                buttons[i, j]->AdjacentMines = CountAdjacentMines(i, j);
-            }
+            buttons[i] = gcnew array<MineButton^>(numCols);
+            adjacentMineCounts[i] = gcnew array<int>(numCols);
         }
     }
 
-    MineButton^ GetButton(int row, int col)
+    void AddMine(int row, int col)
     {
-        return buttons[row, col];
-    }
-
-    int CountAdjacentMines(int row, int col)
-    {
-        int count = 0;
-
         for (int i = -1; i <= 1; ++i)
         {
             for (int j = -1; j <= 1; ++j)
             {
-                if (i == 0 && j == 0) continue;
-
                 int newRow = row + i;
                 int newCol = col + j;
 
-                if (newRow >= 0 && newRow < numRows && newCol >= 0 && newCol < numCols)
+                if (newRow >= 0 && newRow < NumRows && newCol >= 0 && newCol < NumCols)
                 {
-                    if (buttons[newRow, newCol]->IsMine)
-                    {
-                        ++count;
-                    }
+                    ++adjacentMineCounts[newRow][newCol];
                 }
             }
         }
-
-        return count;
     }
 
-    property int NumRows
+    int GetAdjacentMineCount(int row, int col)
     {
-        int get() { return numRows; }
+        return adjacentMineCounts[row][col];
     }
 
-    property int NumCols
+    void SetButton(int row, int col, MineButton^ button)
     {
-        int get() { return numCols; }
+        buttons[row][col] = button;
     }
+
+    MineButton^ GetButton(int row, int col)
+    {
+        return buttons[row][col];
+    }
+
+    int GetNumRows()
+    {
+        return NumRows;
+    }
+
+    int GetNumCols()
+    {
+        return NumCols;
+    }
+
+    int GetNumBombs()
+    {
+        return NumBombs;
+    }
+
+    void InitializeField()
+    {
+        for (int i = 0; i < NumRows; ++i)
+        {
+            for (int j = 0; j < NumCols; ++j)
+            {
+                adjacentMineCounts[i][j] = 0;
+            }
+        }
+    }
+
+
+private:
+    int NumRows;
+    int NumCols;
+    int NumBombs;
+    array<array<MineButton^>^>^ buttons;
+    array<array<int>^>^ adjacentMineCounts;
 };

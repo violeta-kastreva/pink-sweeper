@@ -12,6 +12,7 @@ public:
     property bool IsRevealed;
     property int AdjacentMines;
     property bool IsFlagged;
+  
 
     MineButton(int row, int col)
     {
