@@ -24,10 +24,8 @@ namespace MineSweeper {
 	using namespace System::Resources;
 	using namespace System::Reflection;
 
-
 	#include "MineButton.h"
 	#include "MineField.h"
-
 	
 
 	public ref class MyForm : public System::Windows::Forms::Form
@@ -49,8 +47,6 @@ namespace MineSweeper {
 			}
 		}
 
-
-
 	protected:
 
 	private:
@@ -62,6 +58,7 @@ namespace MineSweeper {
 		Button^ generateCustomFieldButton;
 		Button^ btnSave;
 		Button^ btnLoad;
+		Button^ btnHint;
 		const int leftToolBarSize = 200;
 		const int topToolBarSize = 50;
 		const int formWidth = 1000;
@@ -340,7 +337,7 @@ namespace MineSweeper {
 
 		   void MyForm::InitializeMenuUI() {
 			   btnSave = gcnew Button();
-			  // btnSave->Name = "btnSave";
+			   //btnSave->Name = "btnSave";
 			   btnSave->Text = "Save";
 			   btnSave->Location = Point(10, 200);
 			   numRowsTextBox->Size = System::Drawing::Size(50, 20);
@@ -348,12 +345,20 @@ namespace MineSweeper {
 			   this->Controls->Add(btnSave);
 
 			   btnLoad = gcnew Button();
-			 //  btnLoad->Name = "btnLoad";
+			  //btnLoad->Name = "btnLoad";
 			   btnLoad->Text = "Load";
 			   btnLoad->Location = Point(100, 200); //adjust the location 
 			   numRowsTextBox->Size = System::Drawing::Size(50, 20);
 			   btnLoad->Click += gcnew EventHandler(this, &MyForm::LoadGameState);
 			   this->Controls->Add(btnLoad);
+
+			   btnHint = gcnew Button();
+			   //btnHint->Name = "btnHint";
+			   btnHint->Text = "Hint";
+			   btnHint->Location = Point(190, 200); // Adjust the location as needed
+			   btnHint->Click += gcnew EventHandler(this, &MyForm::Hint_Click);
+			   this->Controls->Add(this->btnHint);
+
 
 		   }
 
@@ -465,6 +470,27 @@ namespace MineSweeper {
 
 			   return revealedButtons == (mineField->GetNumRows() * mineField->GetNumCols()) - mineField->GetNumBombs();
 		   }
+
+		   private: void Hint_Click(System::Object^ sender, System::EventArgs^ e) {
+			   bool found = false;
+			   int x, y;
+			   Random^ rand = gcnew Random();
+
+
+			   while (!found) {
+				   x = rand->Next(0, mineField->GetNumRows());
+				   y = rand->Next(0, mineField->GetNumCols());
+
+				   if (!mineField->GetButton(x, y)->IsMine && !mineField->GetButton(x, y)->IsFlagged && !mineField->GetButton(x, y)->IsRevealed) {
+					   found = true;
+				   }
+			   }
+
+			   RevealButton(mineField->GetButton(x,y));
+		   }
+
+			
+
 
 	};
 }
