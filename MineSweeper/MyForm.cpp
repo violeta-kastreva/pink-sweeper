@@ -1,5 +1,5 @@
 #include "MyForm.h"
-
+//chatgpt
 [System::STAThread]
 void main(array <System::String^>^ args) {
     System::Windows::Forms::Application::EnableVisualStyles();

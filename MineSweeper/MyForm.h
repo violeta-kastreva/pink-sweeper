@@ -20,6 +20,9 @@ namespace MineSweeper {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace System::IO;
+	using namespace System::Media;
+	using namespace System::Resources;
+	using namespace System::Reflection;
 
 
 	#include "MineButton.h"
@@ -37,9 +40,6 @@ namespace MineSweeper {
 		}
 
 	protected:
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
 		~MyForm()
 		{
 			if (components)
@@ -53,9 +53,6 @@ namespace MineSweeper {
 	protected:
 
 	private:
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
 		System::ComponentModel::Container^ components;
 		MineField^ mineField;
 		TextBox^ numRowsTextBox;
@@ -70,16 +67,9 @@ namespace MineSweeper {
 
 
 #pragma region Windows Form Designer generated code
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
 		void InitializeComponent(void)
 		{
 			this->SuspendLayout();
-			// 
-			// MyForm
-			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1000, 800);
@@ -102,7 +92,7 @@ namespace MineSweeper {
 	void MyForm::GenerateMatrixOfButtons(int rows, int cols, int numBombs, array<array<bool>^>^ mineData, array<array<bool>^>^ revealedData, array<array<bool>^>^ flaggedData)
 	{
 		const int buttonSize = 28;
-		const int padding = 1;
+		const int padding = 0;
 		const int leftTotalPadding = (formWidth - (cols * (buttonSize + padding) - padding)) / 2 + leftToolBarSize;
 		const int topTotalPadding = (formHeight - (rows * (buttonSize + padding) - padding)) / 2 + topToolBarSize;
 		mineField = gcnew MineField(rows, cols, numBombs);
@@ -194,7 +184,7 @@ namespace MineSweeper {
 
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e)
 	{
-		DeleteMatrixOfButtons();
+		DeleteMatrixOfButtons(); //to be removed
 	}
 		   void MyForm::Button_Click(Object^ sender, MouseEventArgs^ e)
 		   {
@@ -214,6 +204,11 @@ namespace MineSweeper {
 
 		   void MyForm::LeftClickAction(MineButton^ clickedButton)
 		   {
+			   System::Media::SoundPlayer^ soundPlayer = gcnew System::Media::SoundPlayer();
+			   soundPlayer->SoundLocation = "fieldClick.wav";
+			   soundPlayer->Load();
+			   soundPlayer->Play();
+			 
 			   if (clickedButton->IsFlagged || clickedButton->IsRevealed)
 			   {
 				   return;
@@ -226,9 +221,12 @@ namespace MineSweeper {
 			   else
 			   {
 				   RevealButton(clickedButton);
+
 				   if (CheckWin()) {
 					   EndGame(true);
 				   }
+				
+
 			   }
 		   }
 
@@ -250,11 +248,11 @@ namespace MineSweeper {
 		   {
 			   if (isWin)
 			   {
-				   MessageBox::Show("Congratulations! You won the game!", "Pinksweeper", MessageBoxButtons::OK, MessageBoxIcon::Information);
+				   MessageBox::Show("Congratulations! You won the game!", "Pinksweeper", MessageBoxButtons::OK, MessageBoxIcon::None);
 			   }
 			   else
 			   {
-				   MessageBox::Show("You clicked on a bomb! Game over.", "Pinksweeper", MessageBoxButtons::OK, MessageBoxIcon::Error);
+				   MessageBox::Show("You clicked on a bomb! Game over.", "Pinksweeper", MessageBoxButtons::OK, MessageBoxIcon::None);
 			   }
 			   for (int i = 0; i < mineField->GetNumRows(); ++i)
 			   {
@@ -439,11 +437,6 @@ namespace MineSweeper {
 
 			   return revealedButtons == (mineField->GetNumRows() * mineField->GetNumCols()) - mineField->GetNumBombs();
 		   }
-
-
-		 
-
-
 
 	};
 }
