@@ -6,7 +6,7 @@
 //the code for the application follows the .NET conventions
 //it uses standard .NET classes to provide better integration
 //things such as the array and class definitions are done in a ".NET" way
-//anything that doesn't look like native C++ is simply a .NET component
+//anything that doesn't look like native C++ is simply a .NET component / C++ CLI
 //!
 
 
@@ -39,9 +39,13 @@ namespace MineSweeper {
 			InitializeCustomFieldUI();
 			InitializeMenuUI();
 			InitializeStatisticsUI();
+			InitializeTimer();
 			gameStats = gcnew GameStatistics();
 			gameStats->LoadFromFile(); 
 			UpdateStatisticLabels(gameStats);
+			
+		
+
 		}
 
 	protected:
@@ -77,16 +81,25 @@ namespace MineSweeper {
 		Label^ lblLongestLoseStreak;
 		Label^ lblCurrentStreak;
 		GameStatistics^ gameStats;
+		Timer^ gameTimer;
+		Label^ elapsedTimeLabel;
+		int elapsedTimeInSeconds = 0;
+
 
 
 #pragma region Windows Form Designer generated code
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MyForm::typeid));
 			this->SuspendLayout();
+			// 
+			// MyForm
+			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1000, 800);
+			this->ClientSize = System::Drawing::Size(984, 761);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->MaximumSize = System::Drawing::Size(1000, 800);
 			this->MinimumSize = System::Drawing::Size(1000, 800);
 			this->Name = L"MyForm";
@@ -202,6 +215,11 @@ namespace MineSweeper {
 		   void MyForm::Button_Click(Object^ sender, MouseEventArgs^ e)
 		   {
 			   MineButton^ clickedButton = safe_cast<MineButton^>(sender); //stolen from chatgpt
+
+			   if (!gameTimer->Enabled)
+			   {
+				   gameTimer->Start();
+			   }
 
 			   if (e->Button == System::Windows::Forms::MouseButtons::Left)
 			   {
@@ -367,7 +385,7 @@ namespace MineSweeper {
 			   btnHint = gcnew Button();
 			   //btnHint->Name = "btnHint";
 			   btnHint->Text = "Hint";
-			   btnHint->Location = Point(190, 200); // Adjust the location as needed
+			   btnHint->Location = Point(190, 200);
 			   btnHint->Click += gcnew EventHandler(this, &MyForm::Hint_Click);
 			   this->Controls->Add(this->btnHint);
 
@@ -409,6 +427,18 @@ namespace MineSweeper {
 			   lblCurrentStreak->Location = Point(10, 520);
 			   lblCurrentStreak->AutoSize = true;
 			   Controls->Add(lblCurrentStreak);
+		   }
+
+		   void MyForm::InitializeTimer() {
+			   gameTimer = gcnew Timer();
+			   gameTimer->Interval = 1000;
+			   gameTimer->Tick += gcnew System::EventHandler(this, &MyForm::gameTimer_Tick);
+			   
+		
+			   elapsedTimeLabel = gcnew Label();
+			   elapsedTimeLabel->Location = Point(200, 650); 
+			   elapsedTimeLabel->AutoSize = true;
+			   this->Controls->Add(elapsedTimeLabel);
 		   }
 
 		   void MyForm::GenerateCustomFieldButton_Click(Object^ sender, EventArgs^ e)
@@ -587,7 +617,13 @@ namespace MineSweeper {
 				lblCurrentStreak->Text = "Current Streak: " + stats->currentStreak;
 			}
 
-			
+			void gameTimer_Tick(System::Object^ sender, System::EventArgs^ e) { //chatgpt
+				elapsedTimeInSeconds++;
+				int hours = elapsedTimeInSeconds / 3600;
+				int minutes = (elapsedTimeInSeconds % 3600) / 60;
+				int seconds = elapsedTimeInSeconds % 60;
+				elapsedTimeLabel->Text = String::Format("{0:D2}:{1:D2}:{2:D2}", hours, minutes, seconds);
+			}
 
 	};
 }
