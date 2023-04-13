@@ -16,7 +16,8 @@ namespace MineSweeper {
 	public:
 		MyForm(void)
 		{
-			InitializeComponent();
+			InitializeComponent();    
+			InitializeCustomFieldUI();
 
 			//
 			//TODO: Add the constructor code here
@@ -34,7 +35,7 @@ namespace MineSweeper {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::Button^ button1;
+
 
 
 	protected:
@@ -45,6 +46,14 @@ namespace MineSweeper {
 		/// </summary>
 		System::ComponentModel::Container^ components;
 		MineField^ mineField;
+		TextBox^ numRowsTextBox;
+		TextBox^ numColsTextBox;
+		TextBox^ numBombsTextBox;
+		Button^ generateCustomFieldButton;
+		const int leftToolBarSize = 200;
+		const int topToolBarSize = 50;
+		const int formWidth = 1000;
+		const int formHeight = 800;
 
 
 #pragma region Windows Form Designer generated code
@@ -54,40 +63,33 @@ namespace MineSweeper {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
-			// 
-			// button1
-			// 
-			this->button1->Location = System::Drawing::Point(581, 12);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(41, 37);
-			this->button1->TabIndex = 0;
-			this->button1->Text = L"button1";
-			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
 			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1239, 687);
-			this->Controls->Add(this->button1);
+			this->ClientSize = System::Drawing::Size(1000, 800);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+			this->MaximumSize = System::Drawing::Size(1000, 800);
+			this->MinimumSize = System::Drawing::Size(1000, 800);
 			this->Name = L"MyForm";
-			this->Text = L"MyForm";
+			this->Text = L"PinkSweeper";
 			this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
 	private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
-		GenerateMatrixOfButtons(20, 44, 2);
+		GenerateMatrixOfButtons(20, 10, 10);
 	}
 
 	void MyForm::GenerateMatrixOfButtons(int rows, int cols, int mines)
 	{
-		const int buttonSize = 30;
-	    const int padding = 10;
+		const int buttonSize = 28;
+	    const int padding = 1;
+		const int leftTotalPadding = (formWidth - (cols * (buttonSize + padding) - padding))/2 + leftToolBarSize;
+		const int topTotalPadding = (formHeight - (rows * (buttonSize + padding) - padding))/2 + topToolBarSize;
 		mineField = gcnew MineField(rows, cols, mines);
 		mineField->InitializeField();
 
@@ -97,7 +99,7 @@ namespace MineSweeper {
 			{
 				MineButton^ button = mineField->GetButton(i, j);
 				button->Size = System::Drawing::Size(buttonSize, buttonSize);
-				button->Location = Point(padding + j * (buttonSize + padding), padding + i * (buttonSize + padding));
+				button->Location = Point(leftTotalPadding + padding + j * (buttonSize + padding), topTotalPadding + padding + i * (buttonSize + padding));
 				button->MouseDown += gcnew MouseEventHandler(this, &MyForm::Button_Click);
 				this->Controls->Add(button);
 			}
@@ -179,11 +181,11 @@ namespace MineSweeper {
 	{
 		if (isWin)
 		{
-			MessageBox::Show("Congratulations! You won the game!", "Minesweeper", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			MessageBox::Show("Congratulations! You won the game!", "Pinksweeper", MessageBoxButtons::OK, MessageBoxIcon::Information);
 		}
 		else
 		{
-			MessageBox::Show("You clicked on a bomb! Game over.", "Minesweeper", MessageBoxButtons::OK, MessageBoxIcon::Error);
+			MessageBox::Show("You clicked on a bomb! Game over.", "Pinksweeper", MessageBoxButtons::OK, MessageBoxIcon::Error);
 		}
 		for (int i = 0; i < mineField->NumRows; ++i)
 		{
@@ -231,6 +233,44 @@ namespace MineSweeper {
 				}
 			}
 		}
+	}
+
+	void MyForm::InitializeCustomFieldUI()
+	{
+		numRowsTextBox = gcnew TextBox();
+		numRowsTextBox->Location = Point(10, 10);
+		numRowsTextBox->Size = System::Drawing::Size(50, 20);
+		numRowsTextBox->Text = "10";
+		this->Controls->Add(numRowsTextBox);
+
+		numColsTextBox = gcnew TextBox();
+		numColsTextBox->Location = Point(70, 10);
+		numColsTextBox->Size = System::Drawing::Size(50, 20);
+		numColsTextBox->Text = "10";
+		this->Controls->Add(numColsTextBox);
+
+		numBombsTextBox = gcnew TextBox();
+		numBombsTextBox->Location = Point(130, 10);
+		numBombsTextBox->Size = System::Drawing::Size(50, 20);
+		numBombsTextBox->Text = "10";
+		this->Controls->Add(numBombsTextBox);
+
+		generateCustomFieldButton = gcnew Button();
+		generateCustomFieldButton->Location = Point(190, 10);
+		generateCustomFieldButton->Size = System::Drawing::Size(120, 20);
+		generateCustomFieldButton->Text = "Generate Custom Field";
+		generateCustomFieldButton->Click += gcnew EventHandler(this, &MyForm::GenerateCustomFieldButton_Click);
+		this->Controls->Add(generateCustomFieldButton);
+	}
+
+	void MyForm::GenerateCustomFieldButton_Click(Object^ sender, EventArgs^ e)
+	{
+		int numRows = Int32::Parse(numRowsTextBox->Text);
+		int numCols = Int32::Parse(numColsTextBox->Text);
+		int numBombs = Int32::Parse(numBombsTextBox->Text);
+
+		DeleteMatrixOfButtons();
+		GenerateMatrixOfButtons(numRows, numCols, numBombs);
 	}
 
 	};
