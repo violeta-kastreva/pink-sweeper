@@ -37,6 +37,7 @@ namespace MineSweeper {
 		{
 			InitializeComponent();
 			InitializeCustomFieldUI();
+			InitializeMenuUI();
 		}
 
 	protected:
@@ -59,6 +60,8 @@ namespace MineSweeper {
 		TextBox^ numColsTextBox;
 		TextBox^ numBombsTextBox;
 		Button^ generateCustomFieldButton;
+		Button^ btnSave;
+		Button^ btnLoad;
 		const int leftToolBarSize = 200;
 		const int topToolBarSize = 50;
 		const int formWidth = 1000;
@@ -232,6 +235,10 @@ namespace MineSweeper {
 
 		   void MyForm::RightClickAction(MineButton^ clickedButton)
 		   {
+			   System::Media::SoundPlayer^ soundPlayer = gcnew System::Media::SoundPlayer();
+			   soundPlayer->SoundLocation = "flagClick.wav";
+			   soundPlayer->Load();
+			   soundPlayer->Play();
 			   clickedButton->IsFlagged = !clickedButton->IsFlagged;
 
 			   if (clickedButton->IsFlagged)
@@ -301,7 +308,7 @@ namespace MineSweeper {
 			   
 		   }
 
-		   void MyForm::InitializeCustomFieldUI()
+		   void MyForm::InitializeCustomFieldUI() //add validation!
 		   {
 			   numRowsTextBox = gcnew TextBox();
 			   numRowsTextBox->Location = Point(10, 10);
@@ -327,6 +334,27 @@ namespace MineSweeper {
 			   generateCustomFieldButton->Text = "Generate Custom Field";
 			   generateCustomFieldButton->Click += gcnew EventHandler(this, &MyForm::GenerateCustomFieldButton_Click);
 			   this->Controls->Add(generateCustomFieldButton);
+
+		   }
+
+
+		   void MyForm::InitializeMenuUI() {
+			   btnSave = gcnew Button();
+			  // btnSave->Name = "btnSave";
+			   btnSave->Text = "Save";
+			   btnSave->Location = Point(10, 200);
+			   numRowsTextBox->Size = System::Drawing::Size(50, 20);
+			   btnSave->Click += gcnew EventHandler(this, &MyForm::SaveGameState);
+			   this->Controls->Add(btnSave);
+
+			   btnLoad = gcnew Button();
+			 //  btnLoad->Name = "btnLoad";
+			   btnLoad->Text = "Load";
+			   btnLoad->Location = Point(100, 200); //adjust the location 
+			   numRowsTextBox->Size = System::Drawing::Size(50, 20);
+			   btnLoad->Click += gcnew EventHandler(this, &MyForm::LoadGameState);
+			   this->Controls->Add(btnLoad);
+
 		   }
 
 		   void MyForm::GenerateCustomFieldButton_Click(Object^ sender, EventArgs^ e)
