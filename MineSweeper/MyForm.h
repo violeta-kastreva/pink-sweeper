@@ -581,7 +581,7 @@ namespace MineSweeper {
 				lblBestTime->Text = "Best Time: " + stats->bestTime + "s";
 				lblGamesPlayed->Text = "Games Played: " + stats->gamesPlayed;
 				lblGamesWon->Text = "Games Won: " + stats->gamesWon;
-				lblWinPercentage->Text = "Win Percentage: " + stats->winPercentage.ToString("P") + "%";
+				lblWinPercentage->Text = "Win Percentage: " + stats->winPercentage.ToString("P");
 				lblLongestWinStreak->Text = "Longest Win Streak: " + stats->longestWinStreak;
 				lblLongestLoseStreak->Text = "Longest Lose Streak: " + stats->longestLoseStreak;
 				lblCurrentStreak->Text = "Current Streak: " + stats->currentStreak;
