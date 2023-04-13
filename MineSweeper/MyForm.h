@@ -39,6 +39,9 @@ namespace MineSweeper {
 			InitializeCustomFieldUI();
 			InitializeMenuUI();
 			InitializeStatisticsUI();
+			gameStats = gcnew GameStatistics();
+			gameStats->LoadFromFile(); 
+			UpdateStatisticLabels(gameStats);
 		}
 
 	protected:
@@ -73,7 +76,7 @@ namespace MineSweeper {
 		Label^ lblLongestWinStreak;
 		Label^ lblLongestLoseStreak;
 		Label^ lblCurrentStreak;
-
+		GameStatistics^ gameStats;
 
 
 #pragma region Windows Form Designer generated code
