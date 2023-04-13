@@ -24,8 +24,10 @@ namespace MineSweeper {
 	using namespace System::Resources;
 	using namespace System::Reflection;
 
+
 	#include "MineButton.h"
 	#include "MineField.h"
+	#include "GameStatistics.cpp"
 	
 
 	public ref class MyForm : public System::Windows::Forms::Form
@@ -36,6 +38,7 @@ namespace MineSweeper {
 			InitializeComponent();
 			InitializeCustomFieldUI();
 			InitializeMenuUI();
+			InitializeStatisticsUI();
 		}
 
 	protected:
@@ -59,10 +62,17 @@ namespace MineSweeper {
 		Button^ btnSave;
 		Button^ btnLoad;
 		Button^ btnHint;
-		const int leftToolBarSize = 200;
+		const int leftToolBarSize = 180;
 		const int topToolBarSize = 50;
 		const int formWidth = 1000;
 		const int formHeight = 800;
+		Label^ lblBestTime;
+		Label^ lblGamesPlayed;
+		Label^ lblGamesWon;
+		Label^ lblWinPercentage;
+		Label^ lblLongestWinStreak;
+		Label^ lblLongestLoseStreak;
+		Label^ lblCurrentStreak;
 
 
 
@@ -224,8 +234,7 @@ namespace MineSweeper {
 
 				   if (CheckWin()) {
 					   EndGame(true);
-				   }
-				
+				   }				
 
 			   }
 		   }
@@ -362,6 +371,43 @@ namespace MineSweeper {
 
 		   }
 
+		   void MyForm::InitializeStatisticsUI() {
+			   lblBestTime = gcnew Label();
+			   lblBestTime->Location = Point(10, 400);
+			   lblBestTime->AutoSize = true;
+			   Controls->Add(lblBestTime);
+
+			   lblGamesPlayed = gcnew Label();
+			   lblGamesPlayed->Location = Point(10, 420);
+			   lblGamesPlayed->AutoSize = true;
+			   Controls->Add(lblGamesPlayed);
+
+			   lblGamesWon = gcnew Label();
+			   lblGamesWon->Location = Point(10, 440);
+			   lblGamesWon->AutoSize = true;
+			   Controls->Add(lblGamesWon);
+
+			   lblWinPercentage = gcnew Label();
+			   lblWinPercentage->Location = Point(10, 460);
+			   lblWinPercentage->AutoSize = true;
+			   Controls->Add(lblWinPercentage);
+
+			   lblLongestWinStreak = gcnew Label();
+			   lblLongestWinStreak->Location = Point(10, 480);
+			   lblLongestWinStreak->AutoSize = true;
+			   Controls->Add(lblLongestWinStreak);
+
+			   lblLongestLoseStreak = gcnew Label();
+			   lblLongestLoseStreak->Location = Point(10, 500);
+			   lblLongestLoseStreak->AutoSize = true;
+			   Controls->Add(lblLongestLoseStreak);
+
+			   lblCurrentStreak = gcnew Label();
+			   lblCurrentStreak->Location = Point(10, 520);
+			   lblCurrentStreak->AutoSize = true;
+			   Controls->Add(lblCurrentStreak);
+		   }
+
 		   void MyForm::GenerateCustomFieldButton_Click(Object^ sender, EventArgs^ e)
 		   {
 			   int numRows = Int32::Parse(numRowsTextBox->Text);
@@ -487,10 +533,58 @@ namespace MineSweeper {
 			   }
 
 			   RevealButton(mineField->GetButton(x,y));
+
+			   if (CheckWin()) {
+				   EndGame(true);
+			   }
 		   }
 
 			
+			GameStatistics^ LoadStatistics() {
+				GameStatistics^ stats = gcnew GameStatistics();
+				try {
+					StreamReader^ inFile = gcnew StreamReader("statistics.txt");
+					stats->bestTime = Int32::Parse(inFile->ReadLine());
+					stats->gamesPlayed = Int32::Parse(inFile->ReadLine());
+					stats->gamesWon = Int32::Parse(inFile->ReadLine());
+					stats->winPercentage = Double::Parse(inFile->ReadLine());
+					stats->longestWinStreak = Int32::Parse(inFile->ReadLine());
+					stats->longestLoseStreak = Int32::Parse(inFile->ReadLine());
+					stats->currentStreak = Int32::Parse(inFile->ReadLine());
+					inFile->Close();
+				} catch (Exception^ e) {
+					Console::WriteLine("Unable to open statistics.txt for reading: " + e->Message);
+				}
+				return stats;
+			}
 
+			void SaveStatistics(GameStatistics^ stats) {
+				try {
+					StreamWriter^ outFile = gcnew StreamWriter("statistics.txt");
+					outFile->WriteLine(stats->bestTime.ToString());
+					outFile->WriteLine(stats->gamesPlayed.ToString());
+					outFile->WriteLine(stats->gamesWon.ToString());
+					outFile->WriteLine(stats->winPercentage.ToString());
+					outFile->WriteLine(stats->longestWinStreak.ToString());
+					outFile->WriteLine(stats->longestLoseStreak.ToString());
+					outFile->WriteLine(stats->currentStreak.ToString());
+					outFile->Close();
+				} catch (Exception^ e) {
+					Console::WriteLine("Unable to open statistics.txt for writing: " + e->Message);
+				}
+			}
+
+			void UpdateStatisticLabels(GameStatistics^ stats) {
+				lblBestTime->Text = "Best Time: " + stats->bestTime + "s";
+				lblGamesPlayed->Text = "Games Played: " + stats->gamesPlayed;
+				lblGamesWon->Text = "Games Won: " + stats->gamesWon;
+				lblWinPercentage->Text = "Win Percentage: " + stats->winPercentage.ToString("P") + "%";
+				lblLongestWinStreak->Text = "Longest Win Streak: " + stats->longestWinStreak;
+				lblLongestLoseStreak->Text = "Longest Lose Streak: " + stats->longestLoseStreak;
+				lblCurrentStreak->Text = "Current Streak: " + stats->currentStreak;
+			}
+
+			
 
 	};
 }

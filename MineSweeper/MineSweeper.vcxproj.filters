@@ -18,11 +18,8 @@
     <ClCompile Include="MyForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MineField.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MineButton.cpp">
-      <Filter>Header Files</Filter>
+    <ClCompile Include="GameStatistics.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
