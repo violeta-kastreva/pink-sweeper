@@ -1,5 +1,15 @@
 #pragma once
 
+//!warning for the oop assistants!
+//! 
+//! 
+//the code for the application follows the .NET conventions
+//it uses standard .NET classes to provide better integration
+//things such as the array and class definitions are done in a ".NET" way
+//anything that doesn't look like native C++ is simply a .NET component
+//!
+//! 
+
 namespace MineSweeper {
 
 	using namespace System;
@@ -272,6 +282,9 @@ namespace MineSweeper {
 		DeleteMatrixOfButtons();
 		GenerateMatrixOfButtons(numRows, numCols, numBombs);
 	}
+
+	
+
 
 	};
 }
