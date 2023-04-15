@@ -79,6 +79,7 @@ namespace MineSweeper {
 		Label^ lblLongestWinStreak;
 		Label^ lblLongestLoseStreak;
 		Label^ lblCurrentStreak;
+		Label^ lblStatistics;
 		GameStatistics^ gameStats;
 		Timer^ gameTimer;
 		Label^ elapsedTimeLabel;
@@ -105,7 +106,7 @@ namespace MineSweeper {
 
 		}
 #pragma endregion
-	private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
+	private: System::Void MyForm_Load(Object^ sender, EventArgs^ e) {
 		GenerateMatrixOfButtons(20, 10, 150, nullptr, nullptr, nullptr);
 	}
 
@@ -204,10 +205,11 @@ namespace MineSweeper {
 		mineField = nullptr;
 	}
 
-	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e)
+	private: System::Void button1_Click(Object^ sender, EventArgs^ e)
 	{
 		DeleteMatrixOfButtons(); //to be removed
 	}
+
 		   void MyForm::Button_Click(Object^ sender, MouseEventArgs^ e)
 		   {
 			   MineButton^ clickedButton = safe_cast<MineButton^>(sender); //stolen from chatgpt
@@ -240,6 +242,7 @@ namespace MineSweeper {
 			   {
 				   return;
 			   }
+		
 
 			   if (clickedButton->IsMine)
 			   {
@@ -279,6 +282,7 @@ namespace MineSweeper {
 
 		   void MyForm::EndGame(bool isWin)
 		   {
+			   gameTimer->Stop();
 			   if (isWin)
 			   {
 				   MessageBox::Show("Congratulations! You won the game!", "Pinksweeper", MessageBoxButtons::OK, MessageBoxIcon::None);
@@ -360,102 +364,133 @@ namespace MineSweeper {
 
 		   void MyForm::InitializeCustomFieldUI() //add validation!
 		   {
+			   System::Drawing::Font^ newFont = gcnew System::Drawing::Font("Arial", 15);
 			   numRowsTextBox = gcnew TextBox();
-			   numRowsTextBox->Location = Point(10, 10);
-			   numRowsTextBox->Size = System::Drawing::Size(50, 20);
+			   numRowsTextBox->Location = Point(350, 60);
+			   numRowsTextBox->Size = System::Drawing::Size(100, 30);
 			   numRowsTextBox->Text = "10";
+			   numRowsTextBox->Font = newFont;
 			   this->Controls->Add(numRowsTextBox);
 
 			   numColsTextBox = gcnew TextBox();
-			   numColsTextBox->Location = Point(70, 10);
-			   numColsTextBox->Size = System::Drawing::Size(50, 20);
+			   numColsTextBox->Location = Point(460, 60);
+			   numColsTextBox->Size = System::Drawing::Size(100, 30);
 			   numColsTextBox->Text = "10";
+			   numColsTextBox->Font = newFont;
 			   this->Controls->Add(numColsTextBox);
 
 			   numBombsTextBox = gcnew TextBox();
-			   numBombsTextBox->Location = Point(130, 10);
-			   numBombsTextBox->Size = System::Drawing::Size(50, 20);
+			   numBombsTextBox->Location = Point(570, 60);
+			   numBombsTextBox->Size = System::Drawing::Size(100, 30);
 			   numBombsTextBox->Text = "10";
+			   numBombsTextBox->Font = newFont;
 			   this->Controls->Add(numBombsTextBox);
 
 			   generateCustomFieldButton = gcnew Button();
-			   generateCustomFieldButton->Location = Point(190, 10);
-			   generateCustomFieldButton->Size = System::Drawing::Size(120, 20);
+			   generateCustomFieldButton->Location = Point(750, 30);
+			   generateCustomFieldButton->Size = System::Drawing::Size(120, 90);
 			   generateCustomFieldButton->Text = "Generate Custom Field";
 			   generateCustomFieldButton->Click += gcnew EventHandler(this, &MyForm::GenerateCustomFieldButton_Click);
+			   generateCustomFieldButton->Font = newFont;
+			   generateCustomFieldButton->BackColor = System::Drawing::Color::AliceBlue;
+			   
 			   this->Controls->Add(generateCustomFieldButton);
 
 		   }
 
 
-		   void MyForm::InitializeMenuUI() {
+		   void MyForm::InitializeMenuUI() 
+		   {
+			   System::Drawing::Font^ newFont = gcnew System::Drawing::Font("Arial", 15);
+
 			   btnSave = gcnew Button();
-			   //btnSave->Name = "btnSave";
 			   btnSave->Text = "Save";
-			   btnSave->Location = Point(10, 200);
-			   numRowsTextBox->Size = System::Drawing::Size(50, 20);
+			   btnSave->Location = Point(10, 400);
+			   btnSave->Size = System::Drawing::Size(100, 50);
+			   btnSave->Font = newFont;
 			   btnSave->Click += gcnew EventHandler(this, &MyForm::SaveGameState);
 			   this->Controls->Add(btnSave);
 
 			   btnLoad = gcnew Button();
-			  //btnLoad->Name = "btnLoad";
 			   btnLoad->Text = "Load";
-			   btnLoad->Location = Point(100, 200); //adjust the location 
-			   numRowsTextBox->Size = System::Drawing::Size(50, 20);
+			   btnLoad->Font = newFont;
+			   btnLoad->Location = Point(10, 550); //adjust the location 
+			   btnLoad->Size = System::Drawing::Size(100, 50);
+
+			   //numRowsTextBox->Size = System::Drawing::Size(100, 50);
 			   btnLoad->Click += gcnew EventHandler(this, &MyForm::LoadGameState);
 			   this->Controls->Add(btnLoad);
 
 			   btnHint = gcnew Button();
-			   //btnHint->Name = "btnHint";
 			   btnHint->Text = "Hint";
-			   btnHint->Location = Point(190, 200);
-			   btnHint->Click += gcnew EventHandler(this, &MyForm::Hint_Click);
+			   btnHint->Location = Point(10, 700);
+			   btnHint->Font = newFont;
+			   btnHint->Size = System::Drawing::Size(100, 50);
+			   btnHint->Click += gcnew EventHandler(this, &MyForm::HintClick);
 			   this->Controls->Add(this->btnHint);
 
 
 		   }
+			
+		   void MyForm::InitializeStatisticsUI() 
+		   {
+			   System::Drawing::Font^ newFont = gcnew System::Drawing::Font("Arial", 15);
 
-		   void MyForm::InitializeStatisticsUI() {
+			   lblStatistics = gcnew Label();
+			   lblStatistics->Location = Point(20, 20);
+			   lblStatistics->AutoSize = true;
+			   lblStatistics->Font = newFont;
+			   lblStatistics->Text = "Statistics";
+			   Controls->Add(lblStatistics);
+
 			   lblBestTime = gcnew Label();
-			   lblBestTime->Location = Point(10, 400);
+			   lblBestTime->Location = Point(10, 100);
 			   lblBestTime->AutoSize = true;
+			   lblBestTime->Font = newFont;
 			   Controls->Add(lblBestTime);
 
 			   lblGamesPlayed = gcnew Label();
-			   lblGamesPlayed->Location = Point(10, 420);
+			   lblGamesPlayed->Location = Point(10, 120);
 			   lblGamesPlayed->AutoSize = true;
+			   lblGamesPlayed->Font = newFont;
 			   Controls->Add(lblGamesPlayed);
 
 			   lblGamesWon = gcnew Label();
-			   lblGamesWon->Location = Point(10, 440);
+			   lblGamesWon->Location = Point(10, 140);
 			   lblGamesWon->AutoSize = true;
+			   lblGamesWon->Font = newFont;
 			   Controls->Add(lblGamesWon);
 
 			   lblWinPercentage = gcnew Label();
-			   lblWinPercentage->Location = Point(10, 460);
+			   lblWinPercentage->Location = Point(10, 160);
 			   lblWinPercentage->AutoSize = true;
+			   lblWinPercentage->Font = newFont;
 			   Controls->Add(lblWinPercentage);
 
 			   lblLongestWinStreak = gcnew Label();
-			   lblLongestWinStreak->Location = Point(10, 480);
+			   lblLongestWinStreak->Location = Point(10, 180);
 			   lblLongestWinStreak->AutoSize = true;
+			   lblLongestWinStreak->Font = newFont;
 			   Controls->Add(lblLongestWinStreak);
 
 			   lblLongestLoseStreak = gcnew Label();
-			   lblLongestLoseStreak->Location = Point(10, 500);
+			   lblLongestLoseStreak->Location = Point(10, 200);
 			   lblLongestLoseStreak->AutoSize = true;
+			   lblLongestLoseStreak->Font = newFont;
 			   Controls->Add(lblLongestLoseStreak);
 
 			   lblCurrentStreak = gcnew Label();
-			   lblCurrentStreak->Location = Point(10, 520);
+			   lblCurrentStreak->Location = Point(10, 220);
 			   lblCurrentStreak->AutoSize = true;
+			   lblCurrentStreak->Font = newFont;
 			   Controls->Add(lblCurrentStreak);
 		   }
 
-		   void MyForm::InitializeTimer() {
+		   void MyForm::InitializeTimer() 
+		   {
 			   gameTimer = gcnew Timer();
 			   gameTimer->Interval = 1000;
-			   gameTimer->Tick += gcnew System::EventHandler(this, &MyForm::gameTimer_Tick);
+			   gameTimer->Tick += gcnew EventHandler(this, &MyForm::gameTimer_Tick);
 			   
 		
 			   elapsedTimeLabel = gcnew Label();
@@ -470,8 +505,15 @@ namespace MineSweeper {
 			   int numCols = Int32::Parse(numColsTextBox->Text);
 			   int numBombs = Int32::Parse(numBombsTextBox->Text);
 
-			   DeleteMatrixOfButtons();
-			   GenerateMatrixOfButtons(numRows, numCols, numBombs, nullptr, nullptr, nullptr);
+			   if (numRows <= 0 || numRows > 20 || numCols <= 0 || numCols > 20 || numRows * numCols <= numBombs || numBombs <= 0) 
+			   {
+				   MessageBox::Show("Input should be valid (grid should be between 1x1 and 20x20, and bomb count can't be greater than tiles count)");
+			   }
+			   else {
+				   DeleteMatrixOfButtons();
+				   GenerateMatrixOfButtons(numRows, numCols, numBombs, nullptr, nullptr, nullptr);
+			   }
+	
 		   }
 
 		   void MyForm::SaveGameState(Object^ sender, EventArgs^ e)
@@ -573,7 +615,7 @@ namespace MineSweeper {
 			   return revealedButtons == (mineField->GetNumRows() * mineField->GetNumCols()) - mineField->GetNumBombs();
 		   }
 
-		   private: void Hint_Click(System::Object^ sender, System::EventArgs^ e) {
+		   private: void HintClick(Object^ sender, EventArgs^ e) {
 			   bool found = false;
 			   int x, y;
 			   Random^ rand = gcnew Random();
@@ -608,8 +650,8 @@ namespace MineSweeper {
 					stats->longestLoseStreak = Int32::Parse(inFile->ReadLine());
 					stats->currentStreak = Int32::Parse(inFile->ReadLine());
 					inFile->Close();
-				} catch (Exception^ e) {
-					Console::WriteLine("Unable to open statistics.txt for reading: " + e->Message);
+				} catch (Exception^ ex) {
+					MessageBox::Show("Unable to open statistics.txt for reading: " + ex->Message);
 				}
 				return stats;
 			}
@@ -625,8 +667,8 @@ namespace MineSweeper {
 					outFile->WriteLine(stats->longestLoseStreak.ToString());
 					outFile->WriteLine(stats->currentStreak.ToString());
 					outFile->Close();
-				} catch (Exception^ e) {
-					Console::WriteLine("Unable to open statistics.txt for writing: " + e->Message);
+				} catch (Exception^ ex) {
+					MessageBox::Show("Unable to open statistics.txt for writing: " + ex->Message);
 				}
 			}
 
