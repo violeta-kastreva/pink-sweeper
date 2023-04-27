@@ -249,7 +249,7 @@ namespace MineSweeper {
                        MineButton^ button = gcnew MineButton(i, j);
                        button->Size = System::Drawing::Size(buttonSize, buttonSize);
                        button->Location = Point(leftTotalPadding + padding + j * (buttonSize + padding), topTotalPadding + padding + i * (buttonSize + padding));
-                       button->MouseDown += gcnew MouseEventHandler(this, &MyForm::Button_Click);
+                       button->MouseDown += gcnew MouseEventHandler(this, &MyForm::MineButtonClick);
                        this->Controls->Add(button);
                        mineField->SetButton(i, j, button);
 
@@ -315,7 +315,7 @@ namespace MineSweeper {
                mineField = nullptr;
            }
 
-           void MyForm::Button_Click(Object^ sender, MouseEventArgs^ e) {
+           void MyForm::MineButtonClick(Object^ sender, MouseEventArgs^ e) {
                MineButton^ clickedButton = safe_cast <MineButton^> (sender); //stolen from chatgpt
 
                if (!gameTimer->Enabled) {
@@ -384,6 +384,11 @@ namespace MineSweeper {
                    button->Text = button->AdjacentMines.ToString();
                }
 
+               Random^ rand = gcnew Random();                  
+               int maxAmountOfFieldsToBeRevealed = rand->Next(0, mineField->GetNumRows());
+
+               int currentlyRevealedFields = 0;
+
                for (int i = -1; i <= 1; ++i) {
                    for (int j = -1; j <= 1; ++j) {
                        if (i == 0 && j == 0) continue;
@@ -391,7 +396,8 @@ namespace MineSweeper {
                        int newRow = button->Row + i;
                        int newCol = button->Col + j;
 
-                       if (newRow >= 0 && newRow < mineField->GetNumRows() && newCol >= 0 && newCol < mineField->GetNumCols() && !mineField->GetButton(newRow, newCol)->IsMine) {
+                       if (newRow >= 0 && newRow < mineField->GetNumRows() && newCol >= 0 && newCol < mineField->GetNumCols() && !mineField->GetButton(newRow, newCol)->IsMine && currentlyRevealedFields <= maxAmountOfFieldsToBeRevealed) {
+                           currentlyRevealedFields++;
                            RevealButton(mineField->GetButton(newRow, newCol));
                        }
                    }
@@ -590,7 +596,7 @@ namespace MineSweeper {
            }
 
            void UpdateStatisticLabels(GameStatistics^ stats) {
-               lblBestTime->Text = "Best Time: " + stats->bestTime + "s";
+               lblBestTime->Text = "Best Time: " + stats->bestTimeFormatted();
                lblGamesPlayed->Text = "Games Played: " + stats->gamesPlayed;
                lblGamesWon->Text = "Games Won: " + stats->gamesWon;
                lblWinPercentage->Text = "Win Percentage: " + Math::Round(stats->winPercentage, 0).ToString() + "%";

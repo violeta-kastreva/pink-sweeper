@@ -12,6 +12,15 @@ public:
     int currentStreak = 0;
     bool winStreak = false;
 
+    String^ bestTimeFormatted() {      
+        if (bestTime > 0) {
+            int hours = bestTime / 3600;
+            int minutes = (bestTime % 3600) / 60;
+            int seconds = bestTime % 60;
+            return String::Format("{0:D2}:{1:D2}:{2:D2}", hours, minutes, seconds);
+        } else return String::Format("{0:D2}:{1:D2}:{2:D2}", 0, 0, 0);
+    }
+
     void LoadFromFile()
     {
         String^ fileName = "statistics.txt";
