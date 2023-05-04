@@ -35,6 +35,9 @@
     <ClInclude Include="MineField.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CustomButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MyResources.resx">

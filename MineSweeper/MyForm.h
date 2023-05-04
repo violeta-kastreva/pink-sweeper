@@ -1,13 +1,6 @@
 #pragma once
 
-//!warning for the oop assistants!
-//! 
-//! 
-//the code for the application follows the .NET conventions
-//it uses standard .NET classes to provide better integration
-//things such as the array and class definitions are done in a ".NET" way
-//anything that doesn't look like native C++ is simply a .NET component / C++ CLI
-//!
+
 
 namespace MineSweeper {
     using namespace System;
@@ -22,9 +15,9 @@ namespace MineSweeper {
     using namespace System::Reflection;
 
 #include "MineButton.h"
-
+#include "CustomButton.h"
 #include "MineField.h"
-
+#include "LoadedFont.cpp"
 #include "GameStatistics.cpp"
 
 
@@ -38,6 +31,7 @@ namespace MineSweeper {
         gameStats = gcnew GameStatistics();
         gameStats->LoadFromFile();
         UpdateStatisticLabels(gameStats);
+        InitializePictures();
     }
 
     protected:
@@ -54,13 +48,14 @@ namespace MineSweeper {
            TextBox^ numRowsTextBox;
            TextBox^ numColsTextBox;
            TextBox^ numBombsTextBox;
-           Button^ generateCustomFieldButton;
+           CustomButton^ generateCustomFieldButton;
            Button^ btnSave;
            Button^ btnLoad;
            Button^ btnHint;
+           Button^ btnExit;
            const int leftToolBarSize = 180;
            const int topToolBarSize = 50;
-           const int formWidth = 1000;
+           const int formWidth = 1200;
            const int formHeight = 800;
            Label^ lblBestTime;
            Label^ lblGamesPlayed;
@@ -70,27 +65,53 @@ namespace MineSweeper {
            Label^ lblLongestLoseStreak;
            Label^ lblCurrentStreak;
            Label^ lblStatistics;
+           Label^ lblSettings;
            GameStatistics^ gameStats;
            Timer^ gameTimer;
            Label^ elapsedTimeLabel;
            int elapsedTimeInSeconds = 0;
+           LoadedFont^ loadedFont = LoadFont(gcnew FileInfo( "customFont.ttf" ), 40, FontStyle::Regular);
+           PictureBox^ timePannelPicBox = gcnew PictureBox();
+           PictureBox^ logoPicBox = gcnew PictureBox();
+           PictureBox^ mainSideBtnPicBox = gcnew PictureBox();
+           PictureBox^ sideBtnPicBox = gcnew PictureBox();
+           PictureBox^ coveredSlotPicBox = gcnew PictureBox();
+           PictureBox^ uncoveredSlotPicBox = gcnew PictureBox();
+           PictureBox^ valueInputPannelPicBox = gcnew PictureBox();
+           PictureBox^ settingsPannelPicBox = gcnew PictureBox();
+           PictureBox^ bombPicBox = gcnew PictureBox();
+    private: System::Windows::Forms::Button^ button1;
+
+           PictureBox^ flagPicBox = gcnew PictureBox();
+
 
 #pragma region Windows Form Designer generated code
            void InitializeComponent(void) {
                System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MyForm::typeid));
+               this->button1 = (gcnew System::Windows::Forms::Button());
                this->SuspendLayout();
+               // 
+               // button1
+               // 
+               this->button1->Location = System::Drawing::Point(676, 222);
+               this->button1->Name = L"button1";
+               this->button1->Size = System::Drawing::Size(75, 23);
+               this->button1->TabIndex = 0;
+               this->button1->Text = L"button1";
+               this->button1->UseVisualStyleBackColor = true;
                // 
                // MyForm
                // 
                this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
                this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-               this->BackColor = System::Drawing::Color::FromArgb(static_cast <System::Int32> (static_cast <System::Byte> (255)), static_cast <System::Int32> (static_cast <System::Byte> (192)),
-                   static_cast <System::Int32> (static_cast <System::Byte> (203)));
-               this->ClientSize = System::Drawing::Size(984, 761);
+               this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(221)),
+                   static_cast<System::Int32>(static_cast<System::Byte>(232)));
+               this->ClientSize = System::Drawing::Size(1184, 761);
+               this->Controls->Add(this->button1);
                this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
-               this->Icon = (cli::safe_cast <System::Drawing::Icon^> (resources->GetObject(L"$this.Icon")));
-               this->MaximumSize = System::Drawing::Size(1000, 800);
-               this->MinimumSize = System::Drawing::Size(1000, 800);
+               this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+               this->MaximumSize = System::Drawing::Size(1200, 800);
+               this->MinimumSize = System::Drawing::Size(1200, 800);
                this->Name = L"MyForm";
                this->Text = L"PinkSweeper";
                this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
@@ -103,66 +124,80 @@ namespace MineSweeper {
     }
            void MyForm::InitializeCustomFieldUI() //add validation!
            {
-               System::Drawing::Font^ newFont = gcnew System::Drawing::Font("Arial", 15);
                numRowsTextBox = gcnew TextBox();
-               numRowsTextBox->Location = Point(350, 60);
+               numRowsTextBox->Location = Point(350, 560);
                numRowsTextBox->Size = System::Drawing::Size(100, 30);
+               numRowsTextBox->ForeColor = Color::White;
                numRowsTextBox->Text = "10";
-               numRowsTextBox->Font = newFont;
+               numRowsTextBox->Font = loadedFont->Font;
                this->Controls->Add(numRowsTextBox);
 
                numColsTextBox = gcnew TextBox();
-               numColsTextBox->Location = Point(460, 60);
+               numColsTextBox->Location = Point(460, 560);
                numColsTextBox->Size = System::Drawing::Size(100, 30);
                numColsTextBox->Text = "10";
-               numColsTextBox->Font = newFont;
+               numColsTextBox->Font = loadedFont->Font;
                this->Controls->Add(numColsTextBox);
 
                numBombsTextBox = gcnew TextBox();
-               numBombsTextBox->Location = Point(570, 60);
+               numBombsTextBox->Location = Point(570, 560);
                numBombsTextBox->Size = System::Drawing::Size(100, 30);
                numBombsTextBox->Text = "10";
-               numBombsTextBox->Font = newFont;
+               numBombsTextBox->Font = loadedFont->Font;
                this->Controls->Add(numBombsTextBox);
 
-               generateCustomFieldButton = gcnew Button();
-               generateCustomFieldButton->Location = Point(750, 30);
-               generateCustomFieldButton->Size = System::Drawing::Size(120, 90);
-               generateCustomFieldButton->Text = "Generate Custom Field";
+               generateCustomFieldButton = gcnew CustomButton();
+               generateCustomFieldButton->Location = Point(10, 250);
+               generateCustomFieldButton->Size = System::Drawing::Size(200, 50);
+               generateCustomFieldButton->Text = "NEW GAME";
                generateCustomFieldButton->Click += gcnew EventHandler(this, &MyForm::GenerateCustomFieldButton_Click);
-               generateCustomFieldButton->Font = newFont;
+               generateCustomFieldButton->Font = loadedFont->Font;
+               generateCustomFieldButton->ForeColor = Color::White;
                generateCustomFieldButton->BackColor = System::Drawing::Color::Transparent;
                generateCustomFieldButton->FlatStyle = FlatStyle::Flat;
                generateCustomFieldButton->FlatAppearance->BorderSize = 0;
+         
                this->Controls->Add(generateCustomFieldButton);
 
+
+               lblSettings = gcnew Label();
+               lblSettings->Location = Point(20, 705);
+               lblSettings->BackColor = System::Drawing::Color::FromArgb(254,248,150, 181);
+               lblSettings->AutoSize = true;
+               lblSettings->Font = loadedFont->Font;
+               lblSettings->ForeColor = Color::White;
+               lblSettings->Text = "Settings ";
+               Controls->Add(lblSettings);
            }
 
-           void MyForm::InitializeMenuUI() {
+           void MyForm::InitializeMenuUI() 
+           {
                System::Drawing::Font^ newFont = gcnew System::Drawing::Font("Arial", 15);
 
-               btnSave = gcnew Button();
-               btnSave->Text = "Save";
-               btnSave->Location = Point(10, 400);
+               btnSave = gcnew CustomButton();
+               btnSave->Text = "SAVE";
+               btnSave->Location = Point(10, 300);
                btnSave->Size = System::Drawing::Size(200, 50);
-               btnSave->Font = newFont;
+               btnSave->Font = loadedFont->Font;
+               btnSave->ForeColor = Color::White;
                btnSave->Click += gcnew EventHandler(this, &MyForm::SaveGameState);
                this->Controls->Add(btnSave);
 
-               btnLoad = gcnew Button();
-               btnLoad->Text = "Load";
-               btnLoad->Font = newFont;
-               btnLoad->Location = Point(10, 550); //adjust the location 
+               btnLoad = gcnew CustomButton();
+               btnLoad->Text = "LOAD";
+               btnLoad->Font = loadedFont->Font;
+               btnLoad->Location = Point(10, 350); //adjust the location 
                btnLoad->Size = System::Drawing::Size(200, 50);
-
+               btnLoad->ForeColor = Color::White;
                btnLoad->Click += gcnew EventHandler(this, &MyForm::LoadGameState);
                this->Controls->Add(btnLoad);
 
-               btnHint = gcnew Button();
-               btnHint->Text = "Hint";
-               btnHint->Location = Point(10, 700);
-               btnHint->Font = newFont;
+               btnHint = gcnew CustomButton();
+               btnHint->Text = "HINT";
+               btnHint->Location = Point(10, 400);
+               btnHint->Font = loadedFont->Font;
                btnHint->Size = System::Drawing::Size(200, 50);
+               btnHint->ForeColor = Color::White;
                btnHint->Click += gcnew EventHandler(this, &MyForm::HintClick);
                this->Controls->Add(this->btnHint);
 
@@ -172,58 +207,57 @@ namespace MineSweeper {
                System::Drawing::Font^ newFont = gcnew System::Drawing::Font("Arial", 15);
 
                lblStatistics = gcnew Label();
-               lblStatistics->Location = Point(20, 20);
+               lblStatistics->Location = Point(920, 20);
                lblStatistics->AutoSize = true;
-               lblStatistics->Font = newFont;
+               lblStatistics->Font = loadedFont->Font;
                lblStatistics->Text = "Statistics";
+               lblStatistics->ForeColor = Color::White;
                Controls->Add(lblStatistics);
 
                lblBestTime = gcnew Label();
-               lblBestTime->Location = Point(10, 100);
+               lblBestTime->Location = Point(910, 100);
                lblBestTime->AutoSize = true;
                lblBestTime->Font = newFont;
                Controls->Add(lblBestTime);
 
                lblGamesPlayed = gcnew Label();
-               lblGamesPlayed->Location = Point(10, 120);
+               lblGamesPlayed->Location = Point(910, 120);
                lblGamesPlayed->AutoSize = true;
                lblGamesPlayed->Font = newFont;
                Controls->Add(lblGamesPlayed);
 
                lblGamesWon = gcnew Label();
-               lblGamesWon->Location = Point(10, 140);
+               lblGamesWon->Location = Point(910, 140);
                lblGamesWon->AutoSize = true;
                lblGamesWon->Font = newFont;
                Controls->Add(lblGamesWon);
 
                lblWinPercentage = gcnew Label();
-               lblWinPercentage->Location = Point(10, 160);
+               lblWinPercentage->Location = Point(910, 160);
                lblWinPercentage->AutoSize = true;
                lblWinPercentage->Font = newFont;
                Controls->Add(lblWinPercentage);
 
                lblLongestWinStreak = gcnew Label();
-               lblLongestWinStreak->Location = Point(10, 180);
+               lblLongestWinStreak->Location = Point(910, 180);
                lblLongestWinStreak->AutoSize = true;
                lblLongestWinStreak->Font = newFont;
                Controls->Add(lblLongestWinStreak);
 
                lblLongestLoseStreak = gcnew Label();
-               lblLongestLoseStreak->Location = Point(10, 200);
+               lblLongestLoseStreak->Location = Point(910, 200);
                lblLongestLoseStreak->AutoSize = true;
                lblLongestLoseStreak->Font = newFont;
                Controls->Add(lblLongestLoseStreak);
 
                lblCurrentStreak = gcnew Label();
-               lblCurrentStreak->Location = Point(10, 220);
+               lblCurrentStreak->Location = Point(910, 220);
                lblCurrentStreak->AutoSize = true;
                lblCurrentStreak->Font = newFont;
                Controls->Add(lblCurrentStreak);
            }
 
            void MyForm::InitializeTimer() {
-               System::Drawing::Font^ newFont = gcnew System::Drawing::Font("Arial", 15);
-
                gameTimer = gcnew Timer();
                gameTimer->Interval = 1000;
                gameTimer->Tick += gcnew EventHandler(this, &MyForm::gameTimer_Tick);
@@ -231,12 +265,41 @@ namespace MineSweeper {
                elapsedTimeLabel = gcnew Label();
                elapsedTimeLabel->Location = Point(200, 650);
                elapsedTimeLabel->AutoSize = true;
-               elapsedTimeLabel->Font = newFont;
+               elapsedTimeLabel->Font = loadedFont->Font;
 
                this->Controls->Add(elapsedTimeLabel);
            }
 
-           void MyForm::GenerateMatrixOfButtons(int rows, int cols, int numBombs, array < array < bool >^ >^ mineData, array < array < bool >^ >^ revealedData, array < array < bool >^ >^ flaggedData) {
+           void MyForm::InitializePictures() {
+               //time pannel
+               Bitmap^ image = gcnew Bitmap("Time_Pannel.png");
+               timePannelPicBox->Image = image;
+               timePannelPicBox->Size = System::Drawing::Size(600, 80);
+               timePannelPicBox->SizeMode = PictureBoxSizeMode::StretchImage; 
+               timePannelPicBox->Location = Point(280, 0);
+               this->Controls->Add(timePannelPicBox);
+
+         
+
+               //settings pannel
+               Bitmap^ imagePannel = gcnew Bitmap("Settings_Pannel.png");
+               settingsPannelPicBox->Image = imagePannel;
+               settingsPannelPicBox->Size = System::Drawing::Size(1180, 100);
+               settingsPannelPicBox->SizeMode = PictureBoxSizeMode::StretchImage;
+               settingsPannelPicBox->Location = Point(0, 700);
+               this->Controls->Add(settingsPannelPicBox);
+
+               //logo 
+               Bitmap^ imageLogo = gcnew Bitmap("Logo.png");
+               logoPicBox->Image = imageLogo;
+               logoPicBox->Size = System::Drawing::Size(220, 110);
+               logoPicBox->SizeMode = PictureBoxSizeMode::StretchImage;
+               logoPicBox->Location = Point(5, 5);
+               this->Controls->Add(logoPicBox);
+           }
+
+           void MyForm::GenerateMatrixOfButtons(int rows, int cols, int numBombs, array < array < bool >^ >^ mineData, array < array < bool >^ >^ revealedData, array < array < bool >^ >^ flaggedData) 
+           {
                const int buttonSize = 28;
                const int padding = 0;
                const int leftTotalPadding = (formWidth - (cols * (buttonSize + padding) - padding)) / 2 + leftToolBarSize;
@@ -332,19 +395,24 @@ namespace MineSweeper {
 
            void MyForm::LeftClickAction(MineButton^ clickedButton) {
                System::Media::SoundPlayer^ soundPlayer = gcnew System::Media::SoundPlayer();
-               soundPlayer->SoundLocation = "fieldClick.wav";
-               soundPlayer->Load();
-               soundPlayer->Play();
-
+      
                if (clickedButton->IsFlagged || clickedButton->IsRevealed) {
                    return;
                }
 
                if (clickedButton->IsMine) {
+
                    gameStats->gamesPlayed++;
+                   soundPlayer->SoundLocation = "bombClick.wav";
+                   soundPlayer->Load();
+                   soundPlayer->Play();
                    EndGame(false);
+
                }
                else {
+                   soundPlayer->SoundLocation = "fieldClick.wav";
+                   soundPlayer->Load();
+                   soundPlayer->Play();
                    RevealButton(clickedButton);
 
                    if (CheckWin()) {
@@ -492,6 +560,40 @@ namespace MineSweeper {
             EndGame(true);
         }
     }
+  private: System::Void button_MouseMove(System::Object^ sender, MouseEventArgs^ e) {
+      Button^ button = safe_cast<Button^>(sender);
+      button->Font = loadedFont->Font;
+      button->BackColor = Color::Transparent;
+  }
+
+           private: System::Void button_MouseHover(System::Object^ sender, MouseEventArgs^ e) {
+               Button^ button = safe_cast<Button^>(sender);
+               button->Font = loadedFont->Font;
+               button->BackColor = Color::Transparent;
+           }
+           private: System::Void button_MouseDown(System::Object^ sender, MouseEventArgs^ e) {
+               Button^ button = safe_cast<Button^>(sender);
+               button->Font = loadedFont->Font;
+               button->BackColor = Color::Transparent;
+           }
+
+            private: System::Void button_MouseUp(System::Object^ sender, MouseEventArgs^ e) {
+                Button^ button = safe_cast<Button^>(sender);
+                button->Font = loadedFont->Font;
+                button->BackColor = Color::Transparent;
+            }
+
+            private: System::Void button_MouseEnter(System::Object^ sender, EventArgs^ e) {
+                Button^ button = safe_cast<Button^>(sender);
+                button->Font = loadedFont->Font;
+                button->BackColor = Color::Transparent;
+            }
+
+            private: System::Void button_MouseLeave(System::Object^ sender, EventArgs^ e) {
+                Button^ button = safe_cast<Button^>(sender);
+                button->Font = loadedFont->Font;
+                button->BackColor = Color::Transparent;
+            }
 
            void MyForm::LoadGameState(Object^ sender, EventArgs^ e) {
                StreamReader^ sr = nullptr;
@@ -613,5 +715,8 @@ namespace MineSweeper {
                elapsedTimeLabel->Text = String::Format("{0:D2}:{1:D2}:{2:D2}", hours, minutes, seconds);
            }
 
-    };
+  
+};
+
+
 }
