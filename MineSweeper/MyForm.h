@@ -1,5 +1,5 @@
 #pragma once
-
+//mouse over hover leave
 
 
 namespace MineSweeper {
@@ -80,7 +80,7 @@ namespace MineSweeper {
            PictureBox^ valueInputPannelPicBox = gcnew PictureBox();
            PictureBox^ settingsPannelPicBox = gcnew PictureBox();
            PictureBox^ bombPicBox = gcnew PictureBox();
-    private: System::Windows::Forms::Button^ button1;
+
 
            PictureBox^ flagPicBox = gcnew PictureBox();
 
@@ -88,17 +88,7 @@ namespace MineSweeper {
 #pragma region Windows Form Designer generated code
            void InitializeComponent(void) {
                System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MyForm::typeid));
-               this->button1 = (gcnew System::Windows::Forms::Button());
                this->SuspendLayout();
-               // 
-               // button1
-               // 
-               this->button1->Location = System::Drawing::Point(676, 222);
-               this->button1->Name = L"button1";
-               this->button1->Size = System::Drawing::Size(75, 23);
-               this->button1->TabIndex = 0;
-               this->button1->Text = L"button1";
-               this->button1->UseVisualStyleBackColor = true;
                // 
                // MyForm
                // 
@@ -107,7 +97,6 @@ namespace MineSweeper {
                this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(221)),
                    static_cast<System::Int32>(static_cast<System::Byte>(232)));
                this->ClientSize = System::Drawing::Size(1184, 761);
-               this->Controls->Add(this->button1);
                this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
                this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
                this->MaximumSize = System::Drawing::Size(1200, 800);
@@ -124,6 +113,7 @@ namespace MineSweeper {
     }
            void MyForm::InitializeCustomFieldUI() //add validation!
            {
+
                numRowsTextBox = gcnew TextBox();
                numRowsTextBox->Location = Point(350, 560);
                numRowsTextBox->Size = System::Drawing::Size(100, 30);
@@ -156,6 +146,7 @@ namespace MineSweeper {
                generateCustomFieldButton->BackColor = System::Drawing::Color::Transparent;
                generateCustomFieldButton->FlatStyle = FlatStyle::Flat;
                generateCustomFieldButton->FlatAppearance->BorderSize = 0;
+               generateCustomFieldButton->MouseEnter += gcnew EventHandler(this, &MyForm::btnMouseEnter);
          
                this->Controls->Add(generateCustomFieldButton);
 
@@ -172,7 +163,6 @@ namespace MineSweeper {
 
            void MyForm::InitializeMenuUI() 
            {
-               System::Drawing::Font^ newFont = gcnew System::Drawing::Font("Arial", 15);
 
                btnSave = gcnew CustomButton();
                btnSave->Text = "SAVE";
@@ -474,6 +464,9 @@ namespace MineSweeper {
            }
 
            void MyForm::GenerateCustomFieldButton_Click(Object^ sender, EventArgs^ e) {
+               Button^ button = safe_cast<Button^>(sender);
+               button->Font = gcnew System::Drawing::Font("Arial", 106);
+               //button->Font = loadedFont->Font;
                int numRows = Int32::Parse(numRowsTextBox->Text);
                int numCols = Int32::Parse(numColsTextBox->Text);
                int numBombs = Int32::Parse(numBombsTextBox->Text);
@@ -485,7 +478,6 @@ namespace MineSweeper {
                    DeleteMatrixOfButtons();
                    GenerateMatrixOfButtons(numRows, numCols, numBombs, nullptr, nullptr, nullptr);
                }
-
            }
 
            bool MyForm::CheckWin() {
@@ -559,39 +551,19 @@ namespace MineSweeper {
         if (CheckWin()) {
             EndGame(true);
         }
+        
     }
-  private: System::Void button_MouseMove(System::Object^ sender, MouseEventArgs^ e) {
-      Button^ button = safe_cast<Button^>(sender);
-      button->Font = loadedFont->Font;
-      button->BackColor = Color::Transparent;
-  }
 
-           private: System::Void button_MouseHover(System::Object^ sender, MouseEventArgs^ e) {
-               Button^ button = safe_cast<Button^>(sender);
-               button->Font = loadedFont->Font;
-               button->BackColor = Color::Transparent;
-           }
-           private: System::Void button_MouseDown(System::Object^ sender, MouseEventArgs^ e) {
-               Button^ button = safe_cast<Button^>(sender);
-               button->Font = loadedFont->Font;
-               button->BackColor = Color::Transparent;
-           }
-
-            private: System::Void button_MouseUp(System::Object^ sender, MouseEventArgs^ e) {
+            void MyForm::btnMouseEnter(System::Object^ sender, EventArgs^ e) {
                 Button^ button = safe_cast<Button^>(sender);
-                button->Font = loadedFont->Font;
-                button->BackColor = Color::Transparent;
-            }
+                button->Font = button->Font;
 
-            private: System::Void button_MouseEnter(System::Object^ sender, EventArgs^ e) {
-                Button^ button = safe_cast<Button^>(sender);
-                button->Font = loadedFont->Font;
-                button->BackColor = Color::Transparent;
+                button->BackColor = Color::Red;
             }
 
             private: System::Void button_MouseLeave(System::Object^ sender, EventArgs^ e) {
                 Button^ button = safe_cast<Button^>(sender);
-                button->Font = loadedFont->Font;
+                button->Font = button->Font;
                 button->BackColor = Color::Transparent;
             }
 
