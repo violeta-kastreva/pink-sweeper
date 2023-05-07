@@ -74,6 +74,7 @@ namespace MineSweeper {
            Label^ lblRows;
            Label^ lblCols;
            Label^ lblBombs;
+           Label^ lblTimer;
            GameStatistics^ gameStats;
            Timer^ gameTimer;
            Label^ elapsedTimeLabel;
@@ -93,14 +94,28 @@ namespace MineSweeper {
            PictureBox^ valueInputPannelPicBox2 = gcnew PictureBox();
            PictureBox^ valueInputPannelPicBox3 = gcnew PictureBox();
            PictureBox^ settingsPannelPicBox = gcnew PictureBox();
+           PictureBox^ statisticsPannelPicBox = gcnew PictureBox();
            PictureBox^ bombPicBox = gcnew PictureBox();
+    private: System::Windows::Forms::Button^ button1;
            PictureBox^ flagPicBox = gcnew PictureBox();
 
 
 #pragma region Windows Form Designer generated code
            void InitializeComponent(void) {
                System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MyForm::typeid));
+               this->button1 = (gcnew System::Windows::Forms::Button());
                this->SuspendLayout();
+               // 
+               // button1
+               // 
+               this->button1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button1.Image")));
+               this->button1->ImageAlign = System::Drawing::ContentAlignment::TopCenter;
+               this->button1->Location = System::Drawing::Point(401, 186);
+               this->button1->Name = L"button1";
+               this->button1->Size = System::Drawing::Size(75, 23);
+               this->button1->TabIndex = 0;
+               this->button1->Text = L"button1";
+               this->button1->UseVisualStyleBackColor = true;
                // 
                // MyForm
                // 
@@ -109,6 +124,7 @@ namespace MineSweeper {
                this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(221)),
                    static_cast<System::Int32>(static_cast<System::Byte>(232)));
                this->ClientSize = System::Drawing::Size(1184, 761);
+               this->Controls->Add(this->button1);
                this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
                this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
                this->MaximumSize = System::Drawing::Size(1200, 800);
@@ -254,9 +270,10 @@ namespace MineSweeper {
                lblLoad->TextAlign = ContentAlignment::MiddleCenter;
                lblLoad->Text = "LOAD";
                lblLoad->Font = loadedFontBigger->Font;
-               lblLoad->Location = Point(10, 365); 
+               lblLoad->Location = Point(10, 351); 
                lblLoad->Size = System::Drawing::Size(200, 50);
                lblLoad->ForeColor = Color::White;
+               lblLoad->BackColor = System::Drawing::Color::FromArgb(248, 150, 182);
                lblLoad->Click += gcnew EventHandler(this, &MyForm::LoadGameState);
                this->Controls->Add(lblLoad);
 
@@ -271,10 +288,11 @@ namespace MineSweeper {
                lblHint = gcnew Label();
                lblHint->Text = "HINT";
                lblHint->TextAlign = ContentAlignment::MiddleCenter;
-               lblHint->Location = Point(10, 421);
+               lblHint->Location = Point(10, 419);
                lblHint->Font = loadedFontBigger->Font;
                lblHint->Size = System::Drawing::Size(200, 50);
                lblHint->ForeColor = Color::White;
+               lblHint->BackColor = System::Drawing::Color::FromArgb(248, 150, 182);
                lblHint->Click += gcnew EventHandler(this, &MyForm::lblHintClick);
                this->Controls->Add(this->lblHint);
 
@@ -286,17 +304,18 @@ namespace MineSweeper {
                btnHint->Click += gcnew EventHandler(this, &MyForm::HintClick);
                this->Controls->Add(this->btnHint);
 
-               Label^ lblExit = gcnew Label();
+               lblExit = gcnew Label();
                lblExit->Text = "EXIT";
                lblExit->TextAlign = ContentAlignment::MiddleCenter;
                lblExit->Font = loadedFontBigger->Font;
                lblExit->Size = System::Drawing::Size(200, 50);
-               lblExit->Location = Point(10, 480);
+               lblExit->Location = Point(10, 481);
                lblExit->ForeColor = Color::White;
+               lblExit->BackColor = System::Drawing::Color::FromArgb(248, 150, 182);
                lblExit->Click += gcnew System::EventHandler(this, &MyForm::ExitLabel_Click);
                this->Controls->Add(lblExit);
 
-               Button^ btnExit = gcnew CustomButton();
+               btnExit = gcnew CustomButton();
                btnExit->Text = "";
                btnExit->Font = loadedFontBigger->Font;
                btnExit->Size = System::Drawing::Size(200, 50);
@@ -306,6 +325,9 @@ namespace MineSweeper {
                this->Controls->Add(btnExit);
 
                lblSave->BringToFront();
+               lblLoad->BringToFront();
+               lblHint->BringToFront();
+               lblExit->BringToFront();
 
            }
 
@@ -332,74 +354,112 @@ namespace MineSweeper {
                System::Drawing::Font^ newFont = gcnew System::Drawing::Font("Arial", 15);
 
                lblStatistics = gcnew Label();
-               lblStatistics->Location = Point(920, 20);
+               lblStatistics->Location = Point(920, 170);
                lblStatistics->AutoSize = true;
-               lblStatistics->Font = loadedFont->Font;
+               lblStatistics->Font = loadedFontBigger->Font;
                lblStatistics->Text = "Statistics";
                lblStatistics->ForeColor = Color::White;
+               lblStatistics->BackColor = System::Drawing::Color::FromArgb(255, 254, 211, 230);
                Controls->Add(lblStatistics);
 
                lblBestTime = gcnew Label();
-               lblBestTime->Location = Point(910, 100);
+               lblBestTime->Location = Point(900, 250);
                lblBestTime->AutoSize = true;
-               lblBestTime->Font = newFont;
+               lblBestTime->ForeColor = System::Drawing::Color::White;
+               lblBestTime->Font = gcnew System::Drawing::Font(L"a_Rewinder", 18, System::Drawing::FontStyle::Regular);;
+               lblBestTime->BackColor = System::Drawing::Color::FromArgb(255, 254, 211, 230);
                Controls->Add(lblBestTime);
 
                lblGamesPlayed = gcnew Label();
-               lblGamesPlayed->Location = Point(910, 120);
+               lblGamesPlayed->Location = Point(900, 350);
                lblGamesPlayed->AutoSize = true;
-               lblGamesPlayed->Font = newFont;
+               lblGamesPlayed->ForeColor = System::Drawing::Color::White;
+               lblGamesPlayed->Font = gcnew System::Drawing::Font(L"a_Rewinder", 18, System::Drawing::FontStyle::Regular);
+               lblGamesPlayed->BackColor = System::Drawing::Color::FromArgb(255, 252, 210, 220);
                Controls->Add(lblGamesPlayed);
 
                lblGamesWon = gcnew Label();
-               lblGamesWon->Location = Point(910, 140);
+               lblGamesWon->Location = Point(900, 300);
                lblGamesWon->AutoSize = true;
-               lblGamesWon->Font = newFont;
+               lblGamesWon ->ForeColor = System::Drawing::Color::White;
+               lblGamesWon->Font = gcnew System::Drawing::Font(L"a_Rewinder", 18, System::Drawing::FontStyle::Regular);;
+               lblGamesWon->BackColor = System::Drawing::Color::FromArgb(255, 254, 211, 230);
                Controls->Add(lblGamesWon);
 
                lblWinPercentage = gcnew Label();
-               lblWinPercentage->Location = Point(910, 160);
+               lblWinPercentage->Location = Point(900, 400);
                lblWinPercentage->AutoSize = true;
-               lblWinPercentage->Font = newFont;
+               lblWinPercentage->ForeColor = System::Drawing::Color::White;
+               lblWinPercentage->Font = gcnew System::Drawing::Font(L"a_Rewinder", 18, System::Drawing::FontStyle::Regular);
+               lblWinPercentage->BackColor = System::Drawing::Color::FromArgb(255, 252, 210, 220);
                Controls->Add(lblWinPercentage);
 
                lblLongestWinStreak = gcnew Label();
-               lblLongestWinStreak->Location = Point(910, 180);
+               lblLongestWinStreak->Location = Point(900, 450);
                lblLongestWinStreak->AutoSize = true;
-               lblLongestWinStreak->Font = newFont;
+               lblLongestWinStreak->ForeColor = System::Drawing::Color::White;
+               lblLongestWinStreak->Font = gcnew System::Drawing::Font(L"a_Rewinder", 18, System::Drawing::FontStyle::Regular);
+               lblLongestWinStreak->BackColor = System::Drawing::Color::FromArgb(255, 252, 210, 220);
                Controls->Add(lblLongestWinStreak);
 
                lblLongestLoseStreak = gcnew Label();
-               lblLongestLoseStreak->Location = Point(910, 200);
+               lblLongestLoseStreak->Location = Point(900, 500);
                lblLongestLoseStreak->AutoSize = true;
-               lblLongestLoseStreak->Font = newFont;
+               lblLongestLoseStreak->ForeColor = System::Drawing::Color::White;
+               lblLongestLoseStreak->Font = gcnew System::Drawing::Font(L"a_Rewinder", 18, System::Drawing::FontStyle::Regular);;
+               lblLongestLoseStreak->BackColor = System::Drawing::Color::FromArgb(255, 252, 210, 220);
                Controls->Add(lblLongestLoseStreak);
 
                lblCurrentStreak = gcnew Label();
-               lblCurrentStreak->Location = Point(910, 220);
+               lblCurrentStreak->Location = Point(900, 550);
                lblCurrentStreak->AutoSize = true;
-               lblCurrentStreak->Font = newFont;
+               lblCurrentStreak->ForeColor = System::Drawing::Color::White;
+               lblCurrentStreak->Font = gcnew System::Drawing::Font(L"a_Rewinder", 18, System::Drawing::FontStyle::Regular);;
+               lblCurrentStreak->BackColor = System::Drawing::Color::FromArgb(255, 252, 210, 220);
                Controls->Add(lblCurrentStreak);
+
+               lblStatistics->BringToFront();
+               lblBestTime->BringToFront();
+               lblWinPercentage->BringToFront();
+               lblGamesWon->BringToFront();
+               lblLongestLoseStreak->BringToFront();
+               lblLongestWinStreak->BringToFront();
+               lblCurrentStreak->BringToFront();
+               lblGamesPlayed->BringToFront();
            }
 
            void MyForm::InitializeTimer() {
+               lblTimer = gcnew Label();
+               lblTimer->Location = Point(320, 30);
+               lblTimer->BackColor = System::Drawing::Color::FromArgb(254, 246, 150, 177);
+               lblTimer->AutoSize = true;
+               lblTimer->Font = loadedFontBigger->Font;
+               lblTimer->ForeColor = Color::White;
+               lblTimer->Text = "Current Time";
+               Controls->Add(lblTimer);
+               lblTimer->BringToFront();
+
+
                gameTimer = gcnew Timer();
                gameTimer->Interval = 1000;
                gameTimer->Tick += gcnew EventHandler(this, &MyForm::gameTimer_Tick);
 
                elapsedTimeLabel = gcnew Label();
-               elapsedTimeLabel->Location = Point(200, 650);
+               elapsedTimeLabel->Location = Point(630, 33);
                elapsedTimeLabel->AutoSize = true;
-               elapsedTimeLabel->Font = loadedFont->Font;
+               elapsedTimeLabel->ForeColor = System::Drawing::Color::White;
+               elapsedTimeLabel->BackColor = System::Drawing::Color::FromArgb(254, 246, 150, 177);
+               elapsedTimeLabel->Font = gcnew System::Drawing::Font(L"a_Rewinder", 30, System::Drawing::FontStyle::Regular);
 
                this->Controls->Add(elapsedTimeLabel);
+               elapsedTimeLabel->BringToFront();
            }
 
            void MyForm::InitializePictures() {
                //time pannel
                Bitmap^ imageTimePannel = gcnew Bitmap("Time_Pannel.png");
                timePannelPicBox->Image = imageTimePannel;
-               timePannelPicBox->Size = System::Drawing::Size(600, 80);
+               timePannelPicBox->Size = System::Drawing::Size(600, 90);
                timePannelPicBox->SizeMode = PictureBoxSizeMode::StretchImage; 
                timePannelPicBox->Location = Point(280, 0);
                this->Controls->Add(timePannelPicBox);
@@ -495,6 +555,14 @@ namespace MineSweeper {
                this->Controls->Add(sideBtnPicBox4);
 
 
+               Bitmap^ statisticsPannel = gcnew Bitmap("Statistics_pannel.jpg");
+               statisticsPannelPicBox->Image = statisticsPannel;
+               statisticsPannelPicBox->Size = System::Drawing::Size(290, 440);
+               statisticsPannelPicBox->SizeMode = PictureBoxSizeMode::StretchImage;
+               statisticsPannelPicBox->Location = Point(890, 155);
+               this->Controls->Add(statisticsPannelPicBox);
+               
+               statisticsPannelPicBox->SendToBack();
                settingsPannelPicBox->SendToBack();
                mainSideBtnPicBox->SendToBack();
 
@@ -503,7 +571,7 @@ namespace MineSweeper {
            void MyForm::GenerateMatrixOfButtons(int rows, int cols, int numBombs, array <array <bool>^ >^ mineData, array <array <bool>^ >^ revealedData, array <array <bool>^ >^ flaggedData) 
            {
                const int buttonSize = 28;
-               const int padding = 0;
+               const int padding = 1;
                const int leftTotalPadding = (formWidth - (cols * (buttonSize + padding) - padding)) / 2 - rows;
                const int topTotalPadding = (formHeight - (rows * (buttonSize + padding) - padding)) / 2 - 20;
                mineField = gcnew MineField(rows, cols, numBombs);
@@ -513,6 +581,8 @@ namespace MineSweeper {
                    for (int j = 0; j < cols; ++j) {
                        MineButton^ button = gcnew MineButton(i, j);
                        button->Size = System::Drawing::Size(buttonSize, buttonSize);
+                       button->Font = gcnew System::Drawing::Font(L"a_Rewinder", 15, System::Drawing::FontStyle::Regular);
+                       button->ForeColor = System::Drawing::Color::White;
                        button->Location = Point(leftTotalPadding + padding + j * (buttonSize + padding), topTotalPadding + padding + i * (buttonSize + padding));
                        button->MouseDown += gcnew MouseEventHandler(this, &MyForm::MineButtonClick);
                        this->Controls->Add(button);
@@ -906,10 +976,7 @@ namespace MineSweeper {
 
 
            void ExitLabel_Click(System::Object^ sender, System::EventArgs^ e) {
-               Button^ exitButton = dynamic_cast<Button^>(this->Controls["Exit"]);
-               if (exitButton != nullptr) {
-                   exitButton->PerformClick();
-               }
+               btnExit->PerformClick();
            }
 
            void ExitButton_Click(System::Object^ sender, System::EventArgs^ e) {
