@@ -24,6 +24,7 @@ namespace MineSweeper {
     public ref class MyForm : public System::Windows::Forms::Form {
     public: MyForm(void) {
         InitializeComponent();
+        InitializePictures();
         InitializeCustomFieldUI();
         InitializeMenuUI();
         InitializeStatisticsUI();
@@ -31,7 +32,6 @@ namespace MineSweeper {
         gameStats = gcnew GameStatistics();
         gameStats->LoadFromFile();
         UpdateStatisticLabels(gameStats);
-        InitializePictures();
     }
 
     protected:
@@ -57,7 +57,12 @@ namespace MineSweeper {
            const int topToolBarSize = 50;
            const int formWidth = 1200;
            const int formHeight = 800;
-           Label^ lblBestTime;
+           Label^ lblSave;
+           Label^ lblLoad;
+           Label^ lblHint;
+           Label^ lblExit;
+           Label^ lblCustomField;
+           Label^ lblBestTime;           
            Label^ lblGamesPlayed;
            Label^ lblGamesWon;
            Label^ lblWinPercentage;
@@ -66,22 +71,29 @@ namespace MineSweeper {
            Label^ lblCurrentStreak;
            Label^ lblStatistics;
            Label^ lblSettings;
+           Label^ lblRows;
+           Label^ lblCols;
+           Label^ lblBombs;
            GameStatistics^ gameStats;
            Timer^ gameTimer;
            Label^ elapsedTimeLabel;
            int elapsedTimeInSeconds = 0;
            LoadedFont^ loadedFont = LoadFont(gcnew FileInfo( "customFont.ttf" ), 40, FontStyle::Regular);
+           LoadedFont^ loadedFontBigger = LoadFont(gcnew FileInfo( "customFont.ttf" ), 52, FontStyle::Regular);
            PictureBox^ timePannelPicBox = gcnew PictureBox();
            PictureBox^ logoPicBox = gcnew PictureBox();
            PictureBox^ mainSideBtnPicBox = gcnew PictureBox();
            PictureBox^ sideBtnPicBox = gcnew PictureBox();
+           PictureBox^ sideBtnPicBox2 = gcnew PictureBox();
+           PictureBox^ sideBtnPicBox3 = gcnew PictureBox();
+           PictureBox^ sideBtnPicBox4 = gcnew PictureBox();
            PictureBox^ coveredSlotPicBox = gcnew PictureBox();
            PictureBox^ uncoveredSlotPicBox = gcnew PictureBox();
            PictureBox^ valueInputPannelPicBox = gcnew PictureBox();
+           PictureBox^ valueInputPannelPicBox2 = gcnew PictureBox();
+           PictureBox^ valueInputPannelPicBox3 = gcnew PictureBox();
            PictureBox^ settingsPannelPicBox = gcnew PictureBox();
            PictureBox^ bombPicBox = gcnew PictureBox();
-
-
            PictureBox^ flagPicBox = gcnew PictureBox();
 
 
@@ -114,84 +126,207 @@ namespace MineSweeper {
            void MyForm::InitializeCustomFieldUI() //add validation!
            {
 
+               lblRows = gcnew Label();
+               lblRows->Location = Point(300, 697);
+               lblRows->BackColor = System::Drawing::Color::FromArgb(254, 248, 150, 181);
+               lblRows->AutoSize = true;
+               lblRows->Font = loadedFont->Font;
+               lblRows->ForeColor = Color::White;
+               lblRows->Text = "rows";
+               Controls->Add(lblRows);
+               lblRows->BringToFront();
+
                numRowsTextBox = gcnew TextBox();
-               numRowsTextBox->Location = Point(350, 560);
+               numRowsTextBox->Location = Point(396, 700);
                numRowsTextBox->Size = System::Drawing::Size(100, 30);
                numRowsTextBox->ForeColor = Color::White;
                numRowsTextBox->Text = "10";
-               numRowsTextBox->Font = loadedFont->Font;
+               numRowsTextBox->Font = gcnew System::Drawing::Font(L"a_Rewinder", 20, System::Drawing::FontStyle::Regular);
+               numRowsTextBox->BackColor = Color::FromArgb(176, 100, 124);
+               numRowsTextBox->BorderStyle = BorderStyle::None;
                this->Controls->Add(numRowsTextBox);
+               numRowsTextBox->BringToFront();
+
+               lblCols = gcnew Label();
+               lblCols->Location = Point(535, 697);
+               lblCols->BackColor = System::Drawing::Color::FromArgb(254, 248, 150, 181);
+               lblCols->AutoSize = true;
+               lblCols->Font = loadedFont->Font;
+               lblCols->ForeColor = Color::White;
+               lblCols->Text = "cols";
+               Controls->Add(lblCols);
+               lblCols->BringToFront();
 
                numColsTextBox = gcnew TextBox();
-               numColsTextBox->Location = Point(460, 560);
+               numColsTextBox->Location = Point(620, 700);
                numColsTextBox->Size = System::Drawing::Size(100, 30);
+               numColsTextBox->ForeColor = Color::White;
                numColsTextBox->Text = "10";
-               numColsTextBox->Font = loadedFont->Font;
+               numColsTextBox->Font = gcnew System::Drawing::Font(L"a_Rewinder", 20, System::Drawing::FontStyle::Regular);
+               numColsTextBox->BackColor = Color::FromArgb(176, 100, 124);
+               numColsTextBox->BorderStyle = BorderStyle::None;
                this->Controls->Add(numColsTextBox);
+               numColsTextBox->BringToFront();
+
+               lblBombs = gcnew Label();
+               lblBombs->Location = Point(720, 708);
+               lblBombs->BackColor = System::Drawing::Color::FromArgb(254, 248, 150, 181);
+               lblBombs->AutoSize = true;
+               lblBombs->Font = loadedFont->Font;
+               lblBombs->ForeColor = Color::White;
+               lblBombs->Text = "bombs";
+               //Controls->Add(lblBombs);
+               //lblBombs->BringToFront();
 
                numBombsTextBox = gcnew TextBox();
-               numBombsTextBox->Location = Point(570, 560);
+               numBombsTextBox->Location = Point(840, 700);
                numBombsTextBox->Size = System::Drawing::Size(100, 30);
+               numBombsTextBox->ForeColor = Color::White;
                numBombsTextBox->Text = "10";
-               numBombsTextBox->Font = loadedFont->Font;
+               numBombsTextBox->Font = gcnew System::Drawing::Font(L"a_Rewinder", 20, System::Drawing::FontStyle::Regular);
+               numBombsTextBox->BackColor = Color::FromArgb(176, 100, 124);
+               numBombsTextBox->BorderStyle = BorderStyle::None;
                this->Controls->Add(numBombsTextBox);
+               numBombsTextBox->BringToFront();
+
+               lblCustomField = gcnew Label();
+               lblCustomField->Location = Point(10, 215);
+               lblCustomField->Size = System::Drawing::Size(260, 50);
+               lblCustomField->Text = "NEW GAME";
+               lblCustomField->Click += gcnew EventHandler(this, &MyForm::lblCustomClick);
+               lblCustomField->Font = loadedFontBigger->Font;
+               lblCustomField->BackColor = System::Drawing::Color::FromArgb(255, 121, 159);
+               lblCustomField->ForeColor = Color::White;
+               lblCustomField->FlatStyle = FlatStyle::Flat;
+               this->Controls->Add(lblCustomField);
+
 
                generateCustomFieldButton = gcnew CustomButton();
-               generateCustomFieldButton->Location = Point(10, 250);
-               generateCustomFieldButton->Size = System::Drawing::Size(200, 50);
-               generateCustomFieldButton->Text = "NEW GAME";
+               generateCustomFieldButton->Location = Point(10, 230);
+               generateCustomFieldButton->Size = System::Drawing::Size(180, 50);
                generateCustomFieldButton->Click += gcnew EventHandler(this, &MyForm::GenerateCustomFieldButton_Click);
-               generateCustomFieldButton->Font = loadedFont->Font;
+               generateCustomFieldButton->Font = loadedFontBigger->Font;
                generateCustomFieldButton->ForeColor = Color::White;
-               generateCustomFieldButton->BackColor = System::Drawing::Color::Transparent;
+               generateCustomFieldButton->BackColor = System::Drawing::Color::FromArgb(255, 121, 159);
                generateCustomFieldButton->FlatStyle = FlatStyle::Flat;
                generateCustomFieldButton->FlatAppearance->BorderSize = 0;
-               generateCustomFieldButton->MouseEnter += gcnew EventHandler(this, &MyForm::btnMouseEnter);
          
                this->Controls->Add(generateCustomFieldButton);
 
 
                lblSettings = gcnew Label();
-               lblSettings->Location = Point(20, 705);
+               lblSettings->Location = Point(20, 695);
                lblSettings->BackColor = System::Drawing::Color::FromArgb(254,248,150, 181);
                lblSettings->AutoSize = true;
-               lblSettings->Font = loadedFont->Font;
+               lblSettings->Font = loadedFontBigger->Font;
                lblSettings->ForeColor = Color::White;
                lblSettings->Text = "Settings ";
                Controls->Add(lblSettings);
+               lblSettings->BringToFront();
+
+               lblCustomField->BringToFront();
            }
 
            void MyForm::InitializeMenuUI() 
            {
 
+               lblSave = gcnew Label();
+               lblSave->TextAlign = ContentAlignment::MiddleCenter;
+               lblSave->Text = "SAVE";
+               lblSave->Location = Point(10, 284);
+               lblSave->Size = System::Drawing::Size(200, 50);
+               lblSave->Font = loadedFontBigger->Font;
+               lblSave->ForeColor = Color::White;
+               lblSave->BackColor = System::Drawing::Color::FromArgb(248, 150, 182);
+               lblSave->Click += gcnew EventHandler(this, &MyForm::lblSaveClick);
+               this->Controls->Add(lblSave);
+
+
                btnSave = gcnew CustomButton();
-               btnSave->Text = "SAVE";
-               btnSave->Location = Point(10, 300);
+               btnSave->Location = Point(10, 306);
                btnSave->Size = System::Drawing::Size(200, 50);
-               btnSave->Font = loadedFont->Font;
+               btnSave->Font = loadedFontBigger->Font;
                btnSave->ForeColor = Color::White;
                btnSave->Click += gcnew EventHandler(this, &MyForm::SaveGameState);
                this->Controls->Add(btnSave);
 
+               lblLoad = gcnew Label();
+               lblLoad->TextAlign = ContentAlignment::MiddleCenter;
+               lblLoad->Text = "LOAD";
+               lblLoad->Font = loadedFontBigger->Font;
+               lblLoad->Location = Point(10, 365); 
+               lblLoad->Size = System::Drawing::Size(200, 50);
+               lblLoad->ForeColor = Color::White;
+               lblLoad->Click += gcnew EventHandler(this, &MyForm::LoadGameState);
+               this->Controls->Add(lblLoad);
+
                btnLoad = gcnew CustomButton();
-               btnLoad->Text = "LOAD";
-               btnLoad->Font = loadedFont->Font;
-               btnLoad->Location = Point(10, 350); //adjust the location 
+               btnLoad->Font = loadedFontBigger->Font;
+               btnLoad->Location = Point(10, 365); 
                btnLoad->Size = System::Drawing::Size(200, 50);
                btnLoad->ForeColor = Color::White;
                btnLoad->Click += gcnew EventHandler(this, &MyForm::LoadGameState);
                this->Controls->Add(btnLoad);
 
+               lblHint = gcnew Label();
+               lblHint->Text = "HINT";
+               lblHint->TextAlign = ContentAlignment::MiddleCenter;
+               lblHint->Location = Point(10, 421);
+               lblHint->Font = loadedFontBigger->Font;
+               lblHint->Size = System::Drawing::Size(200, 50);
+               lblHint->ForeColor = Color::White;
+               lblHint->Click += gcnew EventHandler(this, &MyForm::lblHintClick);
+               this->Controls->Add(this->lblHint);
+
                btnHint = gcnew CustomButton();
-               btnHint->Text = "HINT";
-               btnHint->Location = Point(10, 400);
-               btnHint->Font = loadedFont->Font;
+               btnHint->Location = Point(10, 421);
+               btnHint->Font = loadedFontBigger->Font;
                btnHint->Size = System::Drawing::Size(200, 50);
                btnHint->ForeColor = Color::White;
                btnHint->Click += gcnew EventHandler(this, &MyForm::HintClick);
                this->Controls->Add(this->btnHint);
 
+               Label^ lblExit = gcnew Label();
+               lblExit->Text = "EXIT";
+               lblExit->TextAlign = ContentAlignment::MiddleCenter;
+               lblExit->Font = loadedFontBigger->Font;
+               lblExit->Size = System::Drawing::Size(200, 50);
+               lblExit->Location = Point(10, 480);
+               lblExit->ForeColor = Color::White;
+               lblExit->Click += gcnew System::EventHandler(this, &MyForm::ExitLabel_Click);
+               this->Controls->Add(lblExit);
+
+               Button^ btnExit = gcnew CustomButton();
+               btnExit->Text = "";
+               btnExit->Font = loadedFontBigger->Font;
+               btnExit->Size = System::Drawing::Size(200, 50);
+               btnExit->Location = Point(10, 440);
+               btnExit->ForeColor = Color::White;
+               btnExit->Click += gcnew System::EventHandler(this, &MyForm::ExitButton_Click);
+               this->Controls->Add(btnExit);
+
+               lblSave->BringToFront();
+
            }
+
+
+           void MyForm::lblHintClick(System::Object^ sender, System::EventArgs^ e)
+           {
+               btnHint->PerformClick();
+           }
+
+           void MyForm::lblSaveClick(System::Object^ sender, System::EventArgs^ e)
+           {
+               btnSave->PerformClick();
+           }
+           void MyForm::lblLoadClick(System::Object^ sender, System::EventArgs^ e)
+           {
+               btnLoad->PerformClick();
+           }
+           void MyForm::lblCustomClick(Object^ sender, EventArgs^ e) {
+               generateCustomFieldButton->PerformClick();
+           }
+
 
            void MyForm::InitializeStatisticsUI() {
                System::Drawing::Font^ newFont = gcnew System::Drawing::Font("Arial", 15);
@@ -262,8 +397,8 @@ namespace MineSweeper {
 
            void MyForm::InitializePictures() {
                //time pannel
-               Bitmap^ image = gcnew Bitmap("Time_Pannel.png");
-               timePannelPicBox->Image = image;
+               Bitmap^ imageTimePannel = gcnew Bitmap("Time_Pannel.png");
+               timePannelPicBox->Image = imageTimePannel;
                timePannelPicBox->Size = System::Drawing::Size(600, 80);
                timePannelPicBox->SizeMode = PictureBoxSizeMode::StretchImage; 
                timePannelPicBox->Location = Point(280, 0);
@@ -274,9 +409,9 @@ namespace MineSweeper {
                //settings pannel
                Bitmap^ imagePannel = gcnew Bitmap("Settings_Pannel.png");
                settingsPannelPicBox->Image = imagePannel;
-               settingsPannelPicBox->Size = System::Drawing::Size(1180, 100);
+               settingsPannelPicBox->Size = System::Drawing::Size(1184, 120);
                settingsPannelPicBox->SizeMode = PictureBoxSizeMode::StretchImage;
-               settingsPannelPicBox->Location = Point(0, 700);
+               settingsPannelPicBox->Location = Point(0, 680);
                this->Controls->Add(settingsPannelPicBox);
 
                //logo 
@@ -286,14 +421,91 @@ namespace MineSweeper {
                logoPicBox->SizeMode = PictureBoxSizeMode::StretchImage;
                logoPicBox->Location = Point(5, 5);
                this->Controls->Add(logoPicBox);
+
+
+               //value input pannel
+               Bitmap^ imageValueInput = gcnew Bitmap("Value_Input_Pannel.png");
+               valueInputPannelPicBox->Image = imageValueInput;
+               valueInputPannelPicBox->Size = System::Drawing::Size(104,40);
+               valueInputPannelPicBox->SizeMode = PictureBoxSizeMode::StretchImage;
+               valueInputPannelPicBox->Location = Point(394, 698);
+               this->Controls->Add(valueInputPannelPicBox);
+               valueInputPannelPicBox->SendToBack();
+
+               Bitmap^ imageValueInput2 = gcnew Bitmap("Value_Input_Pannel.png");
+               valueInputPannelPicBox2->Image = imageValueInput2;
+               valueInputPannelPicBox2->Size = System::Drawing::Size(104, 40);
+               valueInputPannelPicBox2->SizeMode = PictureBoxSizeMode::StretchImage;
+               valueInputPannelPicBox2->Location = Point(617, 698);
+               this->Controls->Add(valueInputPannelPicBox2);
+               valueInputPannelPicBox2->SendToBack();
+
+               Bitmap^ imageValueInput3 = gcnew Bitmap("Value_Input_Pannel.png");
+               valueInputPannelPicBox3->Image = imageValueInput3;
+               valueInputPannelPicBox3->Size = System::Drawing::Size(104, 40);
+               valueInputPannelPicBox3->SizeMode = PictureBoxSizeMode::StretchImage;
+               valueInputPannelPicBox3->Location = Point(837, 698);
+               this->Controls->Add(valueInputPannelPicBox3);
+               valueInputPannelPicBox3->SendToBack();
+
+               Bitmap^ imageBomb = gcnew Bitmap("Mine.png");
+               bombPicBox->Image = imageBomb;
+               bombPicBox->Size = System::Drawing::Size(50, 50);
+               bombPicBox->SizeMode = PictureBoxSizeMode::StretchImage;
+               bombPicBox->Location = Point(770, 694);
+               this->Controls->Add(bombPicBox);
+               bombPicBox->SendToBack();
+
+
+               //logo 
+               Bitmap^ mainSideButton = gcnew Bitmap("Button_2.png");
+               mainSideBtnPicBox->Image = mainSideButton;
+               mainSideBtnPicBox->Size = System::Drawing::Size(290, 70);
+               mainSideBtnPicBox->SizeMode = PictureBoxSizeMode::StretchImage;
+               mainSideBtnPicBox->Location = Point(0, 210);
+               this->Controls->Add(mainSideBtnPicBox);
+
+               Bitmap^ sideButton = gcnew Bitmap("Button_1.png");
+               sideBtnPicBox->Image = sideButton;
+               sideBtnPicBox->Size = System::Drawing::Size(250, 70);
+               sideBtnPicBox->SizeMode = PictureBoxSizeMode::StretchImage;
+               sideBtnPicBox->Location = Point(0, 341);
+               this->Controls->Add(sideBtnPicBox);
+
+               Bitmap^ sideButton2 = gcnew Bitmap("Button_1.png");
+               sideBtnPicBox2->Image = sideButton2;
+               sideBtnPicBox2->Size = System::Drawing::Size(250, 70);
+               sideBtnPicBox2->SizeMode = PictureBoxSizeMode::StretchImage;
+               sideBtnPicBox2->Location = Point(0, 408);
+               this->Controls->Add(sideBtnPicBox2);
+
+               Bitmap^ sideButton3 = gcnew Bitmap("Button_1.png");
+               sideBtnPicBox3->Image = sideButton3;
+               sideBtnPicBox3->Size = System::Drawing::Size(250, 70);
+               sideBtnPicBox3->SizeMode = PictureBoxSizeMode::StretchImage;
+               sideBtnPicBox3->Location = Point(0, 475);
+               this->Controls->Add(sideBtnPicBox3);
+
+
+               Bitmap^ sideButton4 = gcnew Bitmap("Button_1.png");
+               sideBtnPicBox4->Image = sideButton4;
+               sideBtnPicBox4->Size = System::Drawing::Size(250, 70);
+               sideBtnPicBox4->SizeMode = PictureBoxSizeMode::StretchImage;
+               sideBtnPicBox4->Location = Point(0, 275);
+               this->Controls->Add(sideBtnPicBox4);
+
+
+               settingsPannelPicBox->SendToBack();
+               mainSideBtnPicBox->SendToBack();
+
            }
 
-           void MyForm::GenerateMatrixOfButtons(int rows, int cols, int numBombs, array < array < bool >^ >^ mineData, array < array < bool >^ >^ revealedData, array < array < bool >^ >^ flaggedData) 
+           void MyForm::GenerateMatrixOfButtons(int rows, int cols, int numBombs, array <array <bool>^ >^ mineData, array <array <bool>^ >^ revealedData, array <array <bool>^ >^ flaggedData) 
            {
                const int buttonSize = 28;
                const int padding = 0;
-               const int leftTotalPadding = (formWidth - (cols * (buttonSize + padding) - padding)) / 2 + leftToolBarSize;
-               const int topTotalPadding = (formHeight - (rows * (buttonSize + padding) - padding)) / 2 + topToolBarSize;
+               const int leftTotalPadding = (formWidth - (cols * (buttonSize + padding) - padding)) / 2 - rows;
+               const int topTotalPadding = (formHeight - (rows * (buttonSize + padding) - padding)) / 2 - 20;
                mineField = gcnew MineField(rows, cols, numBombs);
                mineField->InitializeField();
 
@@ -466,10 +678,15 @@ namespace MineSweeper {
            void MyForm::GenerateCustomFieldButton_Click(Object^ sender, EventArgs^ e) {
                Button^ button = safe_cast<Button^>(sender);
                button->Font = gcnew System::Drawing::Font("Arial", 106);
-               //button->Font = loadedFont->Font;
-               int numRows = Int32::Parse(numRowsTextBox->Text);
-               int numCols = Int32::Parse(numColsTextBox->Text);
-               int numBombs = Int32::Parse(numBombsTextBox->Text);
+               int numRows, numCols, numBombs;
+               if (!int::TryParse(numRowsTextBox->Text, numRows) || !int::TryParse(numColsTextBox->Text, numCols) || !int::TryParse(numBombsTextBox->Text, numBombs)) {
+                   MessageBox::Show("Input should be valid (grid should be between 1x1 and 20x20, and bomb count can't be greater than tiles count)");
+                   return;
+               }
+
+               numRows = Int32::Parse(numRowsTextBox->Text);
+               numCols = Int32::Parse(numColsTextBox->Text);
+               numBombs = Int32::Parse(numBombsTextBox->Text);
 
                if (numRows <= 0 || numRows > 20 || numCols <= 0 || numCols > 20 || numRows * numCols <= numBombs || numBombs <= 0) {
                    MessageBox::Show("Input should be valid (grid should be between 1x1 and 20x20, and bomb count can't be greater than tiles count)");
@@ -687,7 +904,18 @@ namespace MineSweeper {
                elapsedTimeLabel->Text = String::Format("{0:D2}:{1:D2}:{2:D2}", hours, minutes, seconds);
            }
 
-  
+
+           void ExitLabel_Click(System::Object^ sender, System::EventArgs^ e) {
+               Button^ exitButton = dynamic_cast<Button^>(this->Controls["Exit"]);
+               if (exitButton != nullptr) {
+                   exitButton->PerformClick();
+               }
+           }
+
+           void ExitButton_Click(System::Object^ sender, System::EventArgs^ e) {
+               this->Close();
+           }
+
 };
 
 
