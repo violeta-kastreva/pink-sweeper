@@ -14,6 +14,7 @@ public:
     property bool IsRevealed;
     property int AdjacentMines;
     property bool IsFlagged;
+    property bool IsDisabled;
   
 
     MineButton(int row, int col)
@@ -24,6 +25,7 @@ public:
         IsRevealed = false;
         AdjacentMines = 0;
         IsFlagged = false;
+        IsDisabled = false;
 
         this->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
         this->FlatAppearance->BorderSize = 0;
@@ -34,6 +36,15 @@ public:
         this->Image = image;      
     }
 
+    void DisableButton()
+    {
+        IsDisabled = true;
+        this->ForeColor = System::Drawing::Color::White;
+        Bitmap^ uncoveredImage = gcnew Bitmap("Slot_Uncovered.png");
+        this->Image = uncoveredImage;
+    }
+
+
     void OnMouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
     {
         if (e->Button == System::Windows::Forms::MouseButtons::Left)
@@ -42,7 +53,7 @@ public:
             {
                 this->Text = "B";
 
-                Bitmap^ bombImage = gcnew Bitmap("Bomb_Image.png");
+                Bitmap^ bombImage = gcnew Bitmap("Slot_Uncovered.png");
                 this->Image = bombImage;
             }
             else
@@ -66,7 +77,7 @@ public:
                 {
                     this->Text = "F";
 
-                    Bitmap^ flaggedImage = gcnew Bitmap("Flagged_Image.png");
+                    Bitmap^ flaggedImage = gcnew Bitmap("Slot_Uncovered.png");
                     this->Image = flaggedImage;
                 }
                 else

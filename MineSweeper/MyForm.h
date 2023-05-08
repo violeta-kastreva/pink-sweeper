@@ -678,6 +678,9 @@ namespace MineSweeper {
                    soundPlayer->SoundLocation = "bombClick.wav";
                    soundPlayer->Load();
                    soundPlayer->Play();
+
+                   Bitmap^ bombImage = gcnew Bitmap("Slot_Uncovered.png");
+                   clickedButton->Image = bombImage;
                    EndGame(false);
 
                }
@@ -705,20 +708,34 @@ namespace MineSweeper {
 
                if (clickedButton->IsFlagged) {
                    clickedButton->Text = "F";
+                   Bitmap^ coveredImage = gcnew Bitmap("Slot_Uncovered.png");
+                   clickedButton->Image = coveredImage;
                }
                else {
                    clickedButton->Text = "";
+                   Bitmap^ coveredImage = gcnew Bitmap("Slot_Covered.png");
+                   clickedButton->Image = coveredImage;
                }
+
            }
 
            void MyForm::RevealButton(MineButton^ button) {
                if (button->IsFlagged || button->IsRevealed) {
                    return;
                }
+              
+               if (button->AdjacentMines > 0)
+               {
+                   button->Text = button->AdjacentMines.ToString();
+               }
 
                button->IsRevealed = true;
-               button->Enabled = false;
-               button->BackColor = Color::LightGray;
+               button->DisableButton();
+               button->Font = gcnew System::Drawing::Font(L"a_Rewinder", 15, System::Drawing::FontStyle::Regular);
+               button->ForeColor = System::Drawing::Color::White;
+               Bitmap^ uncoveredImage = gcnew Bitmap("Slot_Uncovered.png");
+               button->Image = uncoveredImage;
+
 
                if (button->AdjacentMines > 0) {
                    button->Text = button->AdjacentMines.ToString();
@@ -841,19 +858,7 @@ namespace MineSweeper {
         
     }
 
-            void MyForm::btnMouseEnter(System::Object^ sender, EventArgs^ e) {
-                Button^ button = safe_cast<Button^>(sender);
-                button->Font = button->Font;
-
-                button->BackColor = Color::Red;
-            }
-
-            private: System::Void button_MouseLeave(System::Object^ sender, EventArgs^ e) {
-                Button^ button = safe_cast<Button^>(sender);
-                button->Font = button->Font;
-                button->BackColor = Color::Transparent;
-            }
-
+        
            void MyForm::LoadGameState(Object^ sender, EventArgs^ e) {
                StreamReader^ sr = nullptr;
                try {
