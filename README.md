@@ -4,7 +4,7 @@
 
 **Game Screenshots**
 
- ![game_screenshot_1](/pink-sweeper/blob/master/MineSweeper/pinksweeper_screenshot_1.png) 
+ ![game_screenshot_1](/MineSweeper/pinksweeper_screenshot_1.png) 
  
  
- ![game_screenshot_2](/pink-sweeper/blob/master/MineSweeper/pinksweeper_screenshot_1.png) 
+ ![game_screenshot_2](/MineSweeper/pinksweeper_screenshot_2.png) 
