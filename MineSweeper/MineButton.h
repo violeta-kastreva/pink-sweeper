@@ -51,9 +51,10 @@ public:
         {
             if (IsMine)
             {
-                this->Text = "B";
+                this->Text = "";
+                
 
-                Bitmap^ bombImage = gcnew Bitmap("Slot_Uncovered.png");
+                Bitmap^ bombImage = gcnew Bitmap("Slot_Uncovered_Mine.png");
                 this->Image = bombImage;
             }
             else
@@ -75,9 +76,9 @@ public:
             {
                 if (!IsFlagged)
                 {
-                    this->Text = "F";
+                    this->Text = "";
 
-                    Bitmap^ flaggedImage = gcnew Bitmap("Slot_Uncovered.png");
+                    Bitmap^ flaggedImage = gcnew Bitmap("Slot_Uncovered_Flag.png");
                     this->Image = flaggedImage;
                 }
                 else

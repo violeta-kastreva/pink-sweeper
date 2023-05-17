@@ -1,6 +1,4 @@
 #pragma once
-//mouse over hover leave
-
 
 namespace MineSweeper {
     using namespace System;
@@ -96,35 +94,22 @@ namespace MineSweeper {
            PictureBox^ settingsPannelPicBox = gcnew PictureBox();
            PictureBox^ statisticsPannelPicBox = gcnew PictureBox();
            PictureBox^ bombPicBox = gcnew PictureBox();
-    private: System::Windows::Forms::Button^ button1;
+
            PictureBox^ flagPicBox = gcnew PictureBox();
 
 
 #pragma region Windows Form Designer generated code
            void InitializeComponent(void) {
                System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MyForm::typeid));
-               this->button1 = (gcnew System::Windows::Forms::Button());
                this->SuspendLayout();
-               // 
-               // button1
-               // 
-               this->button1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button1.Image")));
-               this->button1->ImageAlign = System::Drawing::ContentAlignment::TopCenter;
-               this->button1->Location = System::Drawing::Point(401, 186);
-               this->button1->Name = L"button1";
-               this->button1->Size = System::Drawing::Size(75, 23);
-               this->button1->TabIndex = 0;
-               this->button1->Text = L"button1";
-               this->button1->UseVisualStyleBackColor = true;
                // 
                // MyForm
                // 
                this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
                this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-               this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(221)),
-                   static_cast<System::Int32>(static_cast<System::Byte>(232)));
+               this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(225)),
+                   static_cast<System::Int32>(static_cast<System::Byte>(231)));
                this->ClientSize = System::Drawing::Size(1184, 761);
-               this->Controls->Add(this->button1);
                this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
                this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
                this->MaximumSize = System::Drawing::Size(1200, 800);
@@ -139,7 +124,7 @@ namespace MineSweeper {
     private: System::Void MyForm_Load(Object^ sender, EventArgs^ e) {
         GenerateMatrixOfButtons(20, 10, 150, nullptr, nullptr, nullptr);
     }
-           void MyForm::InitializeCustomFieldUI() //add validation!
+           void MyForm::InitializeCustomFieldUI()
            {
 
                lblRows = gcnew Label();
@@ -191,8 +176,6 @@ namespace MineSweeper {
                lblBombs->Font = loadedFont->Font;
                lblBombs->ForeColor = Color::White;
                lblBombs->Text = "bombs";
-               //Controls->Add(lblBombs);
-               //lblBombs->BringToFront();
 
                numBombsTextBox = gcnew TextBox();
                numBombsTextBox->Location = Point(840, 700);
@@ -576,7 +559,8 @@ namespace MineSweeper {
                const int topTotalPadding = (formHeight - (rows * (buttonSize + padding) - padding)) / 2 - 20;
                mineField = gcnew MineField(rows, cols, numBombs);
                mineField->InitializeField();
-
+               gameTimer->Stop();
+               elapsedTimeInSeconds = 0;
                for (int i = 0; i < rows; ++i) {
                    for (int j = 0; j < cols; ++j) {
                        MineButton^ button = gcnew MineButton(i, j);
@@ -601,7 +585,8 @@ namespace MineSweeper {
 
                        if (flaggedData != nullptr && flaggedData[i][j]) {
                            button->IsFlagged = true;
-                           button->Text = "F";
+                           Bitmap^ uncoveredImage = gcnew Bitmap("Slot_Uncovered_Flag.png");
+                           button->Image = uncoveredImage;
                        }
                    }
                }
@@ -652,7 +637,7 @@ namespace MineSweeper {
 
            void MyForm::MineButtonClick(Object^ sender, MouseEventArgs^ e) {
                MineButton^ clickedButton = safe_cast <MineButton^> (sender); //stolen from chatgpt
-
+               if (clickedButton->IsDisabled) return;
                if (!gameTimer->Enabled) {
                    gameTimer->Start();
                }
@@ -666,6 +651,7 @@ namespace MineSweeper {
            }
 
            void MyForm::LeftClickAction(MineButton^ clickedButton) {
+               if (clickedButton->IsDisabled) return;
                System::Media::SoundPlayer^ soundPlayer = gcnew System::Media::SoundPlayer();
       
                if (clickedButton->IsFlagged || clickedButton->IsRevealed) {
@@ -679,7 +665,7 @@ namespace MineSweeper {
                    soundPlayer->Load();
                    soundPlayer->Play();
 
-                   Bitmap^ bombImage = gcnew Bitmap("Slot_Uncovered.png");
+                   Bitmap^ bombImage = gcnew Bitmap("Slot_Uncovered_Mine.png");
                    clickedButton->Image = bombImage;
                    EndGame(false);
 
@@ -700,6 +686,7 @@ namespace MineSweeper {
            }
 
            void MyForm::RightClickAction(MineButton^ clickedButton) {
+               if (clickedButton->IsDisabled) return;
                System::Media::SoundPlayer^ soundPlayer = gcnew System::Media::SoundPlayer();
                soundPlayer->SoundLocation = "flagClick.wav";
                soundPlayer->Load();
@@ -707,8 +694,7 @@ namespace MineSweeper {
                clickedButton->IsFlagged = !clickedButton->IsFlagged;
 
                if (clickedButton->IsFlagged) {
-                   clickedButton->Text = "F";
-                   Bitmap^ coveredImage = gcnew Bitmap("Slot_Uncovered.png");
+                   Bitmap^ coveredImage = gcnew Bitmap("Slot_Uncovered_Flag.png");
                    clickedButton->Image = coveredImage;
                }
                else {
@@ -825,8 +811,11 @@ namespace MineSweeper {
                for (int i = 0; i < mineField->GetNumRows(); ++i) {
                    for (int j = 0; j < mineField->GetNumCols(); ++j) {
                        MineButton^ button = mineField->GetButton(i, j);
+                       button->IsDisabled = true;
                        if (button->IsMine) {
-                           button->Text = "B";
+                           button->Text = "";
+                           Bitmap^ uncoveredImage = gcnew Bitmap("Slot_Uncovered_Mine.png");
+                           button->Image = uncoveredImage;
                        }
                    }
                }
@@ -839,6 +828,14 @@ namespace MineSweeper {
     private: void HintClick(Object^ sender, EventArgs^ e) {
         bool found = false;
         int x, y;
+        bool containsEnabledButtons = false;
+        for (int i = 0; i < mineField->GetNumRows(); i++) {
+            for (int j = 0; j < mineField->GetNumCols(); j++) {
+                if (!mineField->GetButton(i, j)->IsDisabled) containsEnabledButtons = true;
+            }
+        }
+        if (!containsEnabledButtons) return;
+
         Random^ rand = gcnew Random();
 
         while (!found) {
