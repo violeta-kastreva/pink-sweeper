@@ -12,7 +12,7 @@ namespace MineSweeper {
     using namespace System::Resources;
     using namespace System::Reflection;
 
-#include "MineButton.h"
+#include "MineButton.h" 
 #include "CustomButton.h"
 #include "MineField.h"
 #include "LoadedFont.cpp"
@@ -861,6 +861,10 @@ namespace MineSweeper {
                        gameStats->winStreak = true;
                        gameStats->currentStreak = 0;
                    }
+                   int elapsedTime = ParseTimeToSeconds(elapsedTimeLabel->Text);
+                   if (elapsedTime > 0 && elapsedTime < gameStats->bestTime) {
+                       gameStats->bestTime = elapsedTime;
+                   }
                }
                else {
                    MessageBox::Show("You clicked on a bomb! Game over.", "Pinksweeper", MessageBoxButtons::OK, MessageBoxIcon::None);
@@ -884,7 +888,7 @@ namespace MineSweeper {
                        }
                    }
                }
-               gameStats->bestTime = ParseTimeToSeconds(elapsedTimeLabel->Text);
+              
                gameStats->winPercentage = (double)gameStats->gamesWon / gameStats->gamesPlayed * 100;
                UpdateStatisticLabels(gameStats); //! changes the statistics depending on the last played game status
                SaveStatistics(gameStats);
@@ -906,6 +910,10 @@ namespace MineSweeper {
                 if (!containsEnabledButtons) return;
 
                 Random^ rand = gcnew Random();
+
+                if (!gameTimer->Enabled) {
+                    gameTimer->Start();
+                }
 
                 while (!found) {
                     x = rand->Next(0, mineField->GetNumRows());
@@ -1096,7 +1104,7 @@ namespace MineSweeper {
                    return (int)timeSpan.TotalSeconds;
                }
                else {
-                   throw gcnew FormatException("Invalid time format. Please use HH:MM:SS format.");
+                   return -1;
                }
            }
 

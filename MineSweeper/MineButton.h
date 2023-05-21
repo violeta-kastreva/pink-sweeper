@@ -3,6 +3,7 @@
 using namespace System::Windows::Forms;
 using namespace System::Drawing;
 
+//I wanted to separate the implementation from the header, but every time I tried, I ended up getting hundreds of errors in the MyForm.h class
 
 /**
 * inherits the button class from the .NET library with added functionalities for the MineSweeper game
