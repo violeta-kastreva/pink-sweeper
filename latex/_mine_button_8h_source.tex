@@ -1,0 +1,71 @@
+\doxysection{Mine\+Button.\+h}
+\hypertarget{_mine_button_8h_source}{}\label{_mine_button_8h_source}\mbox{\hyperlink{_mine_button_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00001}00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00003}00003\ \textcolor{keyword}{using\ namespace\ }System::Windows::Forms;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00004}00004\ \textcolor{keyword}{using\ namespace\ }System::Drawing;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00011}\mbox{\hyperlink{class_mine_button_a19b06ff2785bf9cbc811550a243117fc}{00011}}\ \textcolor{keyword}{public\ ref\ class}\ \mbox{\hyperlink{class_mine_button}{MineButton}}\ :\ \textcolor{keyword}{public}\ Button}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00012}00012\ \{}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00013}00013\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00014}00014\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00015}00015\ \ \ \ \ \textcolor{keyword}{property}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_mine_button_aadb3f9de1d917dd293af5bedb465761a}{Row}};\ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00016}00016\ \ \ \ \ \textcolor{keyword}{property}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_mine_button_a6534eb5e0add4b1165ad1fcc76a02d0d}{Col}};\ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00017}00017\ \ \ \ \ \textcolor{keyword}{property}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_mine_button_add3c1c253b36a9b00030a2d6432df2fe}{IsMine}};\ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00018}00018\ \ \ \ \ \textcolor{keyword}{property}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_mine_button_aeaa25276f2ae316fb27888f3451b0b88}{IsRevealed}};\ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00019}00019\ \ \ \ \ \textcolor{keyword}{property}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_mine_button_a19b06ff2785bf9cbc811550a243117fc}{AdjacentMines}};\ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00020}00020\ \ \ \ \ \textcolor{keyword}{property}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_mine_button_a81a3effaa0226608612650df5da60dee}{IsFlagged}};\ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00021}00021\ \ \ \ \ \textcolor{keyword}{property}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_mine_button_a8c36b1b745d0f6e931374317ee9bcf0e}{IsDisabled}};\ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00022}00022\ \ \ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00024}\mbox{\hyperlink{class_mine_button_ac284d6ad95b17e5037ddde0db5061d7f}{00024}}\ \ \ \ \ \mbox{\hyperlink{class_mine_button_ac284d6ad95b17e5037ddde0db5061d7f}{MineButton}}(\textcolor{keywordtype}{int}\ row,\ \textcolor{keywordtype}{int}\ col)}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00025}00025\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00026}00026\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_mine_button_aadb3f9de1d917dd293af5bedb465761a}{Row}}\ =\ row;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00027}00027\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_mine_button_a6534eb5e0add4b1165ad1fcc76a02d0d}{Col}}\ =\ col;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00028}00028\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_mine_button_add3c1c253b36a9b00030a2d6432df2fe}{IsMine}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00029}00029\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_mine_button_aeaa25276f2ae316fb27888f3451b0b88}{IsRevealed}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00030}00030\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_mine_button_a19b06ff2785bf9cbc811550a243117fc}{AdjacentMines}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00031}00031\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_mine_button_a81a3effaa0226608612650df5da60dee}{IsFlagged}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00032}00032\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_mine_button_a8c36b1b745d0f6e931374317ee9bcf0e}{IsDisabled}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00034}00034\ \ \ \ \ \ \ \ \ this-\/>FlatStyle\ =\ System::Windows::Forms::FlatStyle::Flat;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00035}00035\ \ \ \ \ \ \ \ \ this-\/>FlatAppearance-\/>BorderSize\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00036}00036\ \ \ \ \ \ \ \ \ this-\/>FlatAppearance-\/>MouseDownBackColor\ =\ System::Drawing::Color::Transparent;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00037}00037\ \ \ \ \ \ \ \ \ this-\/>FlatAppearance-\/>MouseOverBackColor\ =\ System::Drawing::Color::Transparent;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00038}00038\ \ \ \ \ \ \ \ \ this-\/>BackColor\ =\ System::Drawing::Color::Transparent;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00039}00039\ \ \ \ \ \ \ \ \ Bitmap\string^\ image\ =\ gcnew\ Bitmap(\textcolor{stringliteral}{"{}Slot\_Covered.png"{}});}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00040}00040\ \ \ \ \ \ \ \ \ this-\/>Image\ =\ image;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00041}00041\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00045}\mbox{\hyperlink{class_mine_button_ac85ae88e6ddab1f6335a2a8a65df21b6}{00045}}\ \ \ \ \ \mbox{\hyperlink{class_mine_button_ac85ae88e6ddab1f6335a2a8a65df21b6}{MineButton}}()}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00046}00046\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00047}00047\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_mine_button_aadb3f9de1d917dd293af5bedb465761a}{Row}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00048}00048\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_mine_button_a6534eb5e0add4b1165ad1fcc76a02d0d}{Col}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00049}00049\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_mine_button_add3c1c253b36a9b00030a2d6432df2fe}{IsMine}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00050}00050\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_mine_button_aeaa25276f2ae316fb27888f3451b0b88}{IsRevealed}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00051}00051\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_mine_button_a19b06ff2785bf9cbc811550a243117fc}{AdjacentMines}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00052}00052\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_mine_button_a81a3effaa0226608612650df5da60dee}{IsFlagged}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00053}00053\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_mine_button_a8c36b1b745d0f6e931374317ee9bcf0e}{IsDisabled}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00055}00055\ \ \ \ \ \ \ \ \ this-\/>FlatStyle\ =\ System::Windows::Forms::FlatStyle::Flat;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00056}00056\ \ \ \ \ \ \ \ \ this-\/>FlatAppearance-\/>BorderSize\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00057}00057\ \ \ \ \ \ \ \ \ this-\/>FlatAppearance-\/>MouseDownBackColor\ =\ System::Drawing::Color::Transparent;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00058}00058\ \ \ \ \ \ \ \ \ this-\/>FlatAppearance-\/>MouseOverBackColor\ =\ System::Drawing::Color::Transparent;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00059}00059\ \ \ \ \ \ \ \ \ this-\/>BackColor\ =\ System::Drawing::Color::Transparent;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00060}00060\ \ \ \ \ \ \ \ \ Bitmap\string^\ image\ =\ gcnew\ Bitmap(\textcolor{stringliteral}{"{}Slot\_Covered.png"{}});}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00061}00061\ \ \ \ \ \ \ \ \ this-\/>Image\ =\ image;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00062}00062\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00067}\mbox{\hyperlink{class_mine_button_a1fa1dc3762db2bc7d012c6c42a4fa539}{00067}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_mine_button_a1fa1dc3762db2bc7d012c6c42a4fa539}{DisableButton}}()}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00068}00068\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00069}00069\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_mine_button_a8c36b1b745d0f6e931374317ee9bcf0e}{IsDisabled}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00070}00070\ \ \ \ \ \ \ \ \ this-\/>ForeColor\ =\ System::Drawing::Color::White;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00071}00071\ \ \ \ \ \ \ \ \ Bitmap\string^\ uncoveredImage\ =\ gcnew\ Bitmap(\textcolor{stringliteral}{"{}Slot\_Uncovered.png"{}});}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00072}00072\ \ \ \ \ \ \ \ \ this-\/>Image\ =\ uncoveredImage;}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00073}00073\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{_mine_button_8h_source_l00076}00076\ \};}
+
+\end{DoxyCode}

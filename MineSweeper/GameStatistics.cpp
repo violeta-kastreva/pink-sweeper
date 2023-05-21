@@ -1,5 +1,8 @@
 using namespace System::IO;
 using namespace System;
+/**
+* Class, containing the current game statistics of the player
+*/
 
 public ref class GameStatistics {
 public:
@@ -12,6 +15,7 @@ public:
     int currentStreak = 0;
     bool winStreak = false;
 
+    //! formats the best current time to seconds, minutes and hours
     String^ bestTimeFormatted() {      
         if (bestTime > 0) {
             int hours = bestTime / 3600;
@@ -21,6 +25,11 @@ public:
         } else return String::Format("{0:D2}:{1:D2}:{2:D2}", 0, 0, 0);
     }
 
+    /** 
+    *  loads the current game statistics from a.txt file
+    * @throws throws an exception if the file couldn't be loaded correctly
+    */
+  
     void LoadFromFile()
     {
         String^ fileName = "statistics.txt";

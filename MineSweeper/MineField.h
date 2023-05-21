@@ -7,12 +7,18 @@ using namespace System::Windows::Forms;
 
 ref class MineButton;
 
+/**
+* matrix of MineButtons, used for the grid in the UI
+*/
+
 public ref class MineField
 {
 public:
 #include "MineButton.h"
 #include "MineField.h"
-
+    /**
+    * generates a numRows x numCols grid of MineButtons, with the desired mine count (mine and bomb are interchangeable names in the project)
+    */
     MineField(int numRows, int numCols, int numBombs)
         : NumRows(numRows), NumCols(numCols), NumBombs(numBombs)
     {
@@ -26,6 +32,9 @@ public:
         }
     }
 
+    /**
+    * adds a mine on the desired index, and changes the number of adjacent mines for each neighboring button
+    */
     void AddMine(int row, int col)
     {
         for (int i = -1; i <= 1; ++i)
@@ -73,6 +82,7 @@ public:
         return NumBombs;
     }
 
+    //! initializes a default field
     void InitializeField()
     {
         for (int i = 0; i < NumRows; ++i)
@@ -82,6 +92,16 @@ public:
                 adjacentMineCounts[i][j] = 0;
             }
         }
+    }
+
+    bool AllButtonsAreDisabled() {
+        for (int i = 0; i < NumRows; ++i) {
+            for (int j = 0; j < NumCols; ++j) {
+                if (!buttons[i][j]->IsDisabled) return false;
+            }
+        }
+
+        return true;
     }
 
 

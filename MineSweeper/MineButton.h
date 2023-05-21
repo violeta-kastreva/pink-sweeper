@@ -4,17 +4,21 @@ using namespace System::Windows::Forms;
 using namespace System::Drawing;
 
 
+/**
+* inherits the button class from the .NET library with added functionalities for the MineSweeper game
+*/
+
 public ref class MineButton : public Button
 {
     
 public:
-    property int Row;
-    property int Col;
-    property bool IsMine;
-    property bool IsRevealed;
-    property int AdjacentMines;
-    property bool IsFlagged;
-    property bool IsDisabled;
+    property int Row; //! row index at the grid
+    property int Col; //! col index at the grid
+    property bool IsMine; //! whether the button contains a mine or not
+    property bool IsRevealed; //! whether the button is clicked on already during the game (the button becomes revealed after being left-clicked on)
+    property int AdjacentMines; //! the number of adjacent mine buttons on the grid
+    property bool IsFlagged; //! whether the button is "flagged" (marked by the player as a potential mine)
+    property bool IsDisabled; //! the button becomes disabled if revealed, used for tracking game progress
   
 
     MineButton(int row, int col)
@@ -33,9 +37,33 @@ public:
         this->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Transparent;
         this->BackColor = System::Drawing::Color::Transparent;
         Bitmap^ image = gcnew Bitmap("Slot_Covered.png");
-        this->Image = image;      
+        this->Image = image;
+    }
+    /**
+    * default constructor
+    */
+    MineButton()
+    {
+        Row = 0;
+        Col = 0;
+        IsMine = false;
+        IsRevealed = false;
+        AdjacentMines = 0;
+        IsFlagged = false;
+        IsDisabled = false;
+
+        this->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+        this->FlatAppearance->BorderSize = 0;
+        this->FlatAppearance->MouseDownBackColor = System::Drawing::Color::Transparent;
+        this->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Transparent;
+        this->BackColor = System::Drawing::Color::Transparent;
+        Bitmap^ image = gcnew Bitmap("Slot_Covered.png");
+        this->Image = image;
     }
 
+    /**
+    * changing the button's look in the form once it becomes disabled
+    */
     void DisableButton()
     {
         IsDisabled = true;
@@ -45,52 +73,4 @@ public:
     }
 
 
-    void OnMouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
-    {
-        if (e->Button == System::Windows::Forms::MouseButtons::Left)
-        {
-            if (IsMine)
-            {
-                this->Text = "";
-                
-
-                Bitmap^ bombImage = gcnew Bitmap("Slot_Uncovered_Mine.png");
-                this->Image = bombImage;
-            }
-            else
-            {
-                Bitmap^ uncoveredImage = gcnew Bitmap("Slot_Uncovered.png");
-                this->Image = uncoveredImage;
-
-                if (AdjacentMines > 0)
-                {
-                    this->Text = AdjacentMines.ToString();
-                }
-            }
-
-            IsRevealed = true;
-        }
-        else if (e->Button == System::Windows::Forms::MouseButtons::Right)
-        {
-            if (!IsRevealed)
-            {
-                if (!IsFlagged)
-                {
-                    this->Text = "";
-
-                    Bitmap^ flaggedImage = gcnew Bitmap("Slot_Uncovered_Flag.png");
-                    this->Image = flaggedImage;
-                }
-                else
-                {
-                    this->Text = "";
-
-                    Bitmap^ coveredImage = gcnew Bitmap("Slot_Covered.png");
-                    this->Image = coveredImage;
-                }
-
-                IsFlagged = !IsFlagged;
-            }
-        }
-    }
 };

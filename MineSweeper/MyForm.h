@@ -18,8 +18,11 @@ namespace MineSweeper {
 #include "LoadedFont.cpp"
 #include "GameStatistics.cpp"
 
-
+ 
     public ref class MyForm : public System::Windows::Forms::Form {
+    /**
+     * default form class, used for calling the base methods, which initialize the form interface and functionality
+     */
     public: MyForm(void) {
         InitializeComponent();
         InitializePictures();
@@ -40,7 +43,22 @@ namespace MineSweeper {
         }
 
     protected:
-
+        /**
+        * creates all the needed components for the project
+        * " ^ " is the .NET equivalent of " & "
+        * 
+        * brief description of the objects used:
+        * 
+        * Button: a graphical interface element that provides the user a simple way to trigger an event, like clicking or tapping. It often contains text or an icon indicating what will happen when the user interacts with it.
+        * 
+        * Label: a simple control that displays a text string which the user can't modify directly. It's often used to identify other user interface elements or provide short instructions or explanations.
+        * 
+        * TextBox: this control allows the user to input text. It's typically used for gathering user input, such as typing in a search query, entering a password, or writing a message.
+        * 
+        * PictureBox: a control that displays an image. 
+        * 
+        * Timer: a component that allows you to perform an action at specified intervals or to track time passed        * 
+        */
     private: System::ComponentModel::Container^ components;
            MineField^ mineField;
            TextBox^ numRowsTextBox;
@@ -99,6 +117,10 @@ namespace MineSweeper {
 
 
 #pragma region Windows Form Designer generated code
+           /**
+           * initializes the base form properties
+           * this method is created by .NET by default (with interface properties modified by me)
+           */
            void InitializeComponent(void) {
                System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MyForm::typeid));
                this->SuspendLayout();
@@ -121,23 +143,31 @@ namespace MineSweeper {
 
            }
 #pragma endregion
+
+    /**
+    * generates a 15x15 grid with 20 bombs upon loading the project
+    */
     private: System::Void MyForm_Load(Object^ sender, EventArgs^ e) {
-        GenerateMatrixOfButtons(20, 10, 150, nullptr, nullptr, nullptr);
+        GenerateMatrixOfButtons(15, 15, 20, nullptr, nullptr, nullptr);
     }
+           /**
+           * generates the labels and buttons for customizing the game grid
+           * below are explained all the parameters for one label only, as for the rest of the labels and buttons in the code the specifics are the same
+           */
            void MyForm::InitializeCustomFieldUI()
            {
 
-               lblRows = gcnew Label();
-               lblRows->Location = Point(300, 697);
-               lblRows->BackColor = System::Drawing::Color::FromArgb(254, 248, 150, 181);
-               lblRows->AutoSize = true;
-               lblRows->Font = loadedFont->Font;
-               lblRows->ForeColor = Color::White;
-               lblRows->Text = "rows";
-               Controls->Add(lblRows);
-               lblRows->BringToFront();
+               lblRows = gcnew Label(); //! label "rows: "
+               lblRows->Location = Point(300, 697); //! location of the specified object, X and Y coordinates
+               lblRows->BackColor = System::Drawing::Color::FromArgb(254, 248, 150, 181); //! background color of the object, in a RGB format
+               lblRows->AutoSize = true; 
+               lblRows->Font = loadedFont->Font; //! setting the font of the object to the custom font
+               lblRows->ForeColor = Color::White; //! text color of the object, with the default White color from .NET
+               lblRows->Text = "rows"; //! text in the object 
+               Controls->Add(lblRows); //! adding the object to the form controls
+               lblRows->BringToFront(); //! bringing the object on top of other ones
 
-               numRowsTextBox = gcnew TextBox();
+               numRowsTextBox = gcnew TextBox(); //! textbox for input of the row count
                numRowsTextBox->Location = Point(396, 700);
                numRowsTextBox->Size = System::Drawing::Size(100, 30);
                numRowsTextBox->ForeColor = Color::White;
@@ -148,7 +178,7 @@ namespace MineSweeper {
                this->Controls->Add(numRowsTextBox);
                numRowsTextBox->BringToFront();
 
-               lblCols = gcnew Label();
+               lblCols = gcnew Label(); //! label "cols: "
                lblCols->Location = Point(535, 697);
                lblCols->BackColor = System::Drawing::Color::FromArgb(254, 248, 150, 181);
                lblCols->AutoSize = true;
@@ -158,7 +188,7 @@ namespace MineSweeper {
                Controls->Add(lblCols);
                lblCols->BringToFront();
 
-               numColsTextBox = gcnew TextBox();
+               numColsTextBox = gcnew TextBox();//! textbox for the input of the column count
                numColsTextBox->Location = Point(620, 700);
                numColsTextBox->Size = System::Drawing::Size(100, 30);
                numColsTextBox->ForeColor = Color::White;
@@ -169,15 +199,7 @@ namespace MineSweeper {
                this->Controls->Add(numColsTextBox);
                numColsTextBox->BringToFront();
 
-               lblBombs = gcnew Label();
-               lblBombs->Location = Point(720, 708);
-               lblBombs->BackColor = System::Drawing::Color::FromArgb(254, 248, 150, 181);
-               lblBombs->AutoSize = true;
-               lblBombs->Font = loadedFont->Font;
-               lblBombs->ForeColor = Color::White;
-               lblBombs->Text = "bombs";
-
-               numBombsTextBox = gcnew TextBox();
+               numBombsTextBox = gcnew TextBox(); //! textbox for the input of the mine (bomb) count
                numBombsTextBox->Location = Point(840, 700);
                numBombsTextBox->Size = System::Drawing::Size(100, 30);
                numBombsTextBox->ForeColor = Color::White;
@@ -188,11 +210,11 @@ namespace MineSweeper {
                this->Controls->Add(numBombsTextBox);
                numBombsTextBox->BringToFront();
 
-               lblCustomField = gcnew Label();
+               lblCustomField = gcnew Label();//! label that stays on top of the "NEW GAME" button and activates it upon clicking
                lblCustomField->Location = Point(10, 215);
                lblCustomField->Size = System::Drawing::Size(260, 50);
                lblCustomField->Text = "NEW GAME";
-               lblCustomField->Click += gcnew EventHandler(this, &MyForm::lblCustomClick);
+               lblCustomField->Click += gcnew EventHandler(this, &MyForm::lblCustomClick); //!  EventHandler is the link between an event (like a label click in that case) and what happens in the code when that event occurs. In that case, the lblCustomClick method is being called
                lblCustomField->Font = loadedFontBigger->Font;
                lblCustomField->BackColor = System::Drawing::Color::FromArgb(255, 121, 159);
                lblCustomField->ForeColor = Color::White;
@@ -200,7 +222,7 @@ namespace MineSweeper {
                this->Controls->Add(lblCustomField);
 
 
-               generateCustomFieldButton = gcnew CustomButton();
+               generateCustomFieldButton = gcnew CustomButton();//! "NEW GAME" button, for initializing a grid with the desired from the player specifics 
                generateCustomFieldButton->Location = Point(10, 230);
                generateCustomFieldButton->Size = System::Drawing::Size(180, 50);
                generateCustomFieldButton->Click += gcnew EventHandler(this, &MyForm::GenerateCustomFieldButton_Click);
@@ -213,7 +235,7 @@ namespace MineSweeper {
                this->Controls->Add(generateCustomFieldButton);
 
 
-               lblSettings = gcnew Label();
+               lblSettings = gcnew Label();//! "Settings: " label
                lblSettings->Location = Point(20, 695);
                lblSettings->BackColor = System::Drawing::Color::FromArgb(254,248,150, 181);
                lblSettings->AutoSize = true;
@@ -225,11 +247,13 @@ namespace MineSweeper {
 
                lblCustomField->BringToFront();
            }
-
+           /**        
+           * Initializes the left-side menu of the interface, containing "Save" game, "Load" saved game "Exit" the project buttons
+           */
            void MyForm::InitializeMenuUI() 
            {
 
-               lblSave = gcnew Label();
+               lblSave = gcnew Label(); //! "SAVE" label 
                lblSave->TextAlign = ContentAlignment::MiddleCenter;
                lblSave->Text = "SAVE";
                lblSave->Location = Point(10, 284);
@@ -241,7 +265,7 @@ namespace MineSweeper {
                this->Controls->Add(lblSave);
 
 
-               btnSave = gcnew CustomButton();
+               btnSave = gcnew CustomButton(); //! button that activates upon clicking the "SAVE" label - saves the game state in a .txt file
                btnSave->Location = Point(10, 306);
                btnSave->Size = System::Drawing::Size(200, 50);
                btnSave->Font = loadedFontBigger->Font;
@@ -249,7 +273,7 @@ namespace MineSweeper {
                btnSave->Click += gcnew EventHandler(this, &MyForm::SaveGameState);
                this->Controls->Add(btnSave);
 
-               lblLoad = gcnew Label();
+               lblLoad = gcnew Label(); //! "LOAD" label 
                lblLoad->TextAlign = ContentAlignment::MiddleCenter;
                lblLoad->Text = "LOAD";
                lblLoad->Font = loadedFontBigger->Font;
@@ -260,7 +284,7 @@ namespace MineSweeper {
                lblLoad->Click += gcnew EventHandler(this, &MyForm::LoadGameState);
                this->Controls->Add(lblLoad);
 
-               btnLoad = gcnew CustomButton();
+               btnLoad = gcnew CustomButton(); //! button that activates upon clicking the "LOAD" label - loads the game state from a .txt file
                btnLoad->Font = loadedFontBigger->Font;
                btnLoad->Location = Point(10, 365); 
                btnLoad->Size = System::Drawing::Size(200, 50);
@@ -268,7 +292,7 @@ namespace MineSweeper {
                btnLoad->Click += gcnew EventHandler(this, &MyForm::LoadGameState);
                this->Controls->Add(btnLoad);
 
-               lblHint = gcnew Label();
+               lblHint = gcnew Label(); //! "HINT" label
                lblHint->Text = "HINT";
                lblHint->TextAlign = ContentAlignment::MiddleCenter;
                lblHint->Location = Point(10, 419);
@@ -279,7 +303,7 @@ namespace MineSweeper {
                lblHint->Click += gcnew EventHandler(this, &MyForm::lblHintClick);
                this->Controls->Add(this->lblHint);
 
-               btnHint = gcnew CustomButton();
+               btnHint = gcnew CustomButton(); //! button that activates upon clicking the "HINT" label - clicks on a random non-mine button
                btnHint->Location = Point(10, 421);
                btnHint->Font = loadedFontBigger->Font;
                btnHint->Size = System::Drawing::Size(200, 50);
@@ -287,7 +311,7 @@ namespace MineSweeper {
                btnHint->Click += gcnew EventHandler(this, &MyForm::HintClick);
                this->Controls->Add(this->btnHint);
 
-               lblExit = gcnew Label();
+               lblExit = gcnew Label(); //! "EXIT" label
                lblExit->Text = "EXIT";
                lblExit->TextAlign = ContentAlignment::MiddleCenter;
                lblExit->Font = loadedFontBigger->Font;
@@ -298,7 +322,7 @@ namespace MineSweeper {
                lblExit->Click += gcnew System::EventHandler(this, &MyForm::ExitLabel_Click);
                this->Controls->Add(lblExit);
 
-               btnExit = gcnew CustomButton();
+               btnExit = gcnew CustomButton(); //! button that activates upon clicking the "EXIT" label - quits the form
                btnExit->Text = "";
                btnExit->Font = loadedFontBigger->Font;
                btnExit->Size = System::Drawing::Size(200, 50);
@@ -317,9 +341,8 @@ namespace MineSweeper {
 
            void MyForm::lblHintClick(System::Object^ sender, System::EventArgs^ e)
            {
-               btnHint->PerformClick();
+               btnHint->PerformClick(); //! clicks the btnHint button
            }
-
            void MyForm::lblSaveClick(System::Object^ sender, System::EventArgs^ e)
            {
                btnSave->PerformClick();
@@ -332,11 +355,13 @@ namespace MineSweeper {
                generateCustomFieldButton->PerformClick();
            }
 
-
+           /**
+           * initializes the statistics pannel, the right pannel in the UI - the rest of the specifics are explained in GameStatistics class
+           */
            void MyForm::InitializeStatisticsUI() {
                System::Drawing::Font^ newFont = gcnew System::Drawing::Font("Arial", 15);
 
-               lblStatistics = gcnew Label();
+               lblStatistics = gcnew Label(); //"Statistics" label
                lblStatistics->Location = Point(920, 170);
                lblStatistics->AutoSize = true;
                lblStatistics->Font = loadedFontBigger->Font;
@@ -345,7 +370,7 @@ namespace MineSweeper {
                lblStatistics->BackColor = System::Drawing::Color::FromArgb(255, 254, 211, 230);
                Controls->Add(lblStatistics);
 
-               lblBestTime = gcnew Label();
+               lblBestTime = gcnew Label(); 
                lblBestTime->Location = Point(900, 250);
                lblBestTime->AutoSize = true;
                lblBestTime->ForeColor = System::Drawing::Color::White;
@@ -411,6 +436,9 @@ namespace MineSweeper {
                lblGamesPlayed->BringToFront();
            }
 
+           /**
+           * initializes the timer that tracks the current game's time
+           */
            void MyForm::InitializeTimer() {
                lblTimer = gcnew Label();
                lblTimer->Location = Point(320, 30);
@@ -437,9 +465,11 @@ namespace MineSweeper {
                this->Controls->Add(elapsedTimeLabel);
                elapsedTimeLabel->BringToFront();
            }
-
+           /**
+           * initializes the images used in the interface
+           */
            void MyForm::InitializePictures() {
-               //time pannel
+               //! time pannel
                Bitmap^ imageTimePannel = gcnew Bitmap("Time_Pannel.png");
                timePannelPicBox->Image = imageTimePannel;
                timePannelPicBox->Size = System::Drawing::Size(600, 90);
@@ -449,7 +479,7 @@ namespace MineSweeper {
 
          
 
-               //settings pannel
+               //! settings pannel
                Bitmap^ imagePannel = gcnew Bitmap("Settings_Pannel.png");
                settingsPannelPicBox->Image = imagePannel;
                settingsPannelPicBox->Size = System::Drawing::Size(1184, 120);
@@ -457,7 +487,7 @@ namespace MineSweeper {
                settingsPannelPicBox->Location = Point(0, 680);
                this->Controls->Add(settingsPannelPicBox);
 
-               //logo 
+               //! logo 
                Bitmap^ imageLogo = gcnew Bitmap("Logo.png");
                logoPicBox->Image = imageLogo;
                logoPicBox->Size = System::Drawing::Size(220, 110);
@@ -466,7 +496,7 @@ namespace MineSweeper {
                this->Controls->Add(logoPicBox);
 
 
-               //value input pannel
+               //! value input pannel - row count
                Bitmap^ imageValueInput = gcnew Bitmap("Value_Input_Pannel.png");
                valueInputPannelPicBox->Image = imageValueInput;
                valueInputPannelPicBox->Size = System::Drawing::Size(104,40);
@@ -475,6 +505,7 @@ namespace MineSweeper {
                this->Controls->Add(valueInputPannelPicBox);
                valueInputPannelPicBox->SendToBack();
 
+               //! value input pannel - column count
                Bitmap^ imageValueInput2 = gcnew Bitmap("Value_Input_Pannel.png");
                valueInputPannelPicBox2->Image = imageValueInput2;
                valueInputPannelPicBox2->Size = System::Drawing::Size(104, 40);
@@ -483,6 +514,7 @@ namespace MineSweeper {
                this->Controls->Add(valueInputPannelPicBox2);
                valueInputPannelPicBox2->SendToBack();
 
+               //! value input pannel - mine count
                Bitmap^ imageValueInput3 = gcnew Bitmap("Value_Input_Pannel.png");
                valueInputPannelPicBox3->Image = imageValueInput3;
                valueInputPannelPicBox3->Size = System::Drawing::Size(104, 40);
@@ -491,6 +523,7 @@ namespace MineSweeper {
                this->Controls->Add(valueInputPannelPicBox3);
                valueInputPannelPicBox3->SendToBack();
 
+               //! mine (bomb) image, next to the mine count input pannel
                Bitmap^ imageBomb = gcnew Bitmap("Mine.png");
                bombPicBox->Image = imageBomb;
                bombPicBox->Size = System::Drawing::Size(50, 50);
@@ -500,7 +533,7 @@ namespace MineSweeper {
                bombPicBox->SendToBack();
 
 
-               //logo 
+               //! "NEW GAME" button image
                Bitmap^ mainSideButton = gcnew Bitmap("Button_2.png");
                mainSideBtnPicBox->Image = mainSideButton;
                mainSideBtnPicBox->Size = System::Drawing::Size(290, 70);
@@ -508,6 +541,7 @@ namespace MineSweeper {
                mainSideBtnPicBox->Location = Point(0, 210);
                this->Controls->Add(mainSideBtnPicBox);
 
+               //! "SAVE" button image
                Bitmap^ sideButton = gcnew Bitmap("Button_1.png");
                sideBtnPicBox->Image = sideButton;
                sideBtnPicBox->Size = System::Drawing::Size(250, 70);
@@ -515,6 +549,7 @@ namespace MineSweeper {
                sideBtnPicBox->Location = Point(0, 341);
                this->Controls->Add(sideBtnPicBox);
 
+               //! "LOAD" button image
                Bitmap^ sideButton2 = gcnew Bitmap("Button_1.png");
                sideBtnPicBox2->Image = sideButton2;
                sideBtnPicBox2->Size = System::Drawing::Size(250, 70);
@@ -522,6 +557,7 @@ namespace MineSweeper {
                sideBtnPicBox2->Location = Point(0, 408);
                this->Controls->Add(sideBtnPicBox2);
 
+               //! "HINT" button image
                Bitmap^ sideButton3 = gcnew Bitmap("Button_1.png");
                sideBtnPicBox3->Image = sideButton3;
                sideBtnPicBox3->Size = System::Drawing::Size(250, 70);
@@ -529,7 +565,7 @@ namespace MineSweeper {
                sideBtnPicBox3->Location = Point(0, 475);
                this->Controls->Add(sideBtnPicBox3);
 
-
+               //! "EXIT" button image
                Bitmap^ sideButton4 = gcnew Bitmap("Button_1.png");
                sideBtnPicBox4->Image = sideButton4;
                sideBtnPicBox4->Size = System::Drawing::Size(250, 70);
@@ -537,7 +573,7 @@ namespace MineSweeper {
                sideBtnPicBox4->Location = Point(0, 275);
                this->Controls->Add(sideBtnPicBox4);
 
-
+               //! statistics pannel image
                Bitmap^ statisticsPannel = gcnew Bitmap("Statistics_pannel.jpg");
                statisticsPannelPicBox->Image = statisticsPannel;
                statisticsPannelPicBox->Size = System::Drawing::Size(290, 440);
@@ -545,21 +581,24 @@ namespace MineSweeper {
                statisticsPannelPicBox->Location = Point(890, 155);
                this->Controls->Add(statisticsPannelPicBox);
                
-               statisticsPannelPicBox->SendToBack();
+               statisticsPannelPicBox->SendToBack(); //! sending the images behind the text
                settingsPannelPicBox->SendToBack();
                mainSideBtnPicBox->SendToBack();
 
            }
 
+           /**
+           * generates the grid of buttons with the desired row, col and mine count, or from a file with data for each button
+           */
            void MyForm::GenerateMatrixOfButtons(int rows, int cols, int numBombs, array <array <bool>^ >^ mineData, array <array <bool>^ >^ revealedData, array <array <bool>^ >^ flaggedData) 
            {
-               const int buttonSize = 28;
+               const int buttonSize = 28; 
                const int padding = 1;
                const int leftTotalPadding = (formWidth - (cols * (buttonSize + padding) - padding)) / 2 - rows;
                const int topTotalPadding = (formHeight - (rows * (buttonSize + padding) - padding)) / 2 - 20;
-               mineField = gcnew MineField(rows, cols, numBombs);
+               mineField = gcnew MineField(rows, cols, numBombs); //! initializes a MineField with the desired row, col and mine count
                mineField->InitializeField();
-               gameTimer->Stop();
+               gameTimer->Stop(); //! restarts the game timer
                elapsedTimeInSeconds = 0;
                for (int i = 0; i < rows; ++i) {
                    for (int j = 0; j < cols; ++j) {
@@ -572,7 +611,7 @@ namespace MineSweeper {
                        this->Controls->Add(button);
                        mineField->SetButton(i, j, button);
 
-                       if (mineData != nullptr && mineData[i][j]) {
+                       if (mineData != nullptr && mineData[i][j]) { //! if there is given data (from a text file) it uses it to create the desired buttons
                            button->IsMine = true;
                            mineField->AddMine(i, j);
                            button->AdjacentMines = mineField->GetAdjacentMineCount(i, j);
@@ -580,7 +619,16 @@ namespace MineSweeper {
 
                        if (revealedData != nullptr && revealedData[i][j]) {
                            button->IsRevealed = true;
-                           button->Text = mineField->GetAdjacentMineCount(i, j).ToString();
+                           if (button->IsMine) {
+                               Bitmap^ uncoveredImage = gcnew Bitmap("Slot_Uncovered_Mine.png");
+                               button->Image = uncoveredImage;
+                           }
+                           else {
+                               Bitmap^ uncoveredImage = gcnew Bitmap("Slot_Uncovered.png");
+                               button->Image = uncoveredImage;
+                           }
+
+                           if(mineField->GetAdjacentMineCount(i,j)!=0) button->Text = mineField->GetAdjacentMineCount(i, j).ToString();
                        }
 
                        if (flaggedData != nullptr && flaggedData[i][j]) {
@@ -591,7 +639,7 @@ namespace MineSweeper {
                    }
                }
 
-               if (mineData == nullptr) {
+               if (mineData == nullptr) { //! if there is no data given, for where each mine should be, they get placed at random places across the board
                    Random^ random = gcnew Random();
                    int bombsPlaced = 0;
                    while (bombsPlaced < numBombs) {
@@ -619,7 +667,7 @@ namespace MineSweeper {
                }
            }
 
-           void MyForm::DeleteMatrixOfButtons() {
+           void MyForm::DeleteMatrixOfButtons() { //! removes the old grid upon creating a new one
                if (mineField == nullptr) {
                    return;
                }
@@ -634,9 +682,11 @@ namespace MineSweeper {
 
                mineField = nullptr;
            }
-
+           /**
+           * the functionality for each mine button on the field - separated into right and left click
+           */
            void MyForm::MineButtonClick(Object^ sender, MouseEventArgs^ e) {
-               MineButton^ clickedButton = safe_cast <MineButton^> (sender); //stolen from chatgpt
+               MineButton^ clickedButton = safe_cast <MineButton^> (sender); //! from ChatGPT
                if (clickedButton->IsDisabled) return;
                if (!gameTimer->Enabled) {
                    gameTimer->Start();
@@ -650,9 +700,12 @@ namespace MineSweeper {
                }
            }
 
+           /**
+           * mine button functionality for when a left mouse click is performed
+           */
            void MyForm::LeftClickAction(MineButton^ clickedButton) {
                if (clickedButton->IsDisabled) return;
-               System::Media::SoundPlayer^ soundPlayer = gcnew System::Media::SoundPlayer();
+               System::Media::SoundPlayer^ soundPlayer = gcnew System::Media::SoundPlayer(); //! sound play
       
                if (clickedButton->IsFlagged || clickedButton->IsRevealed) {
                    return;
@@ -661,39 +714,41 @@ namespace MineSweeper {
                if (clickedButton->IsMine) {
 
                    gameStats->gamesPlayed++;
-                   soundPlayer->SoundLocation = "bombClick.wav";
+                   soundPlayer->SoundLocation = "bombClick.wav"; //! if the button contains a mine, a bomb sound is activated
                    soundPlayer->Load();
                    soundPlayer->Play();
 
-                   Bitmap^ bombImage = gcnew Bitmap("Slot_Uncovered_Mine.png");
+                   Bitmap^ bombImage = gcnew Bitmap("Slot_Uncovered_Mine.png"); //! the image on the button changes to a mine image
                    clickedButton->Image = bombImage;
-                   EndGame(false);
+                   EndGame(false); //! the game ends as a loss
 
                }
                else {
                    soundPlayer->SoundLocation = "fieldClick.wav";
                    soundPlayer->Load();
                    soundPlayer->Play();
-                   RevealButton(clickedButton);
+                   RevealButton(clickedButton); //! the button image changes to an uncovered button image
 
                    if (CheckWin()) {
                        gameStats->gamesPlayed++;
                        gameStats->gamesWon++;
-                       EndGame(true);
+                       EndGame(true); //! the game ends as a victory
                    }
 
                }
            }
-
-           void MyForm::RightClickAction(MineButton^ clickedButton) {
+           /**
+           * mine button functionality for when a right mouse click is performed - the button becomes "flagged" as a potential mine
+           */
+           void MyForm::RightClickAction(MineButton^ clickedButton) { //
                if (clickedButton->IsDisabled) return;
                System::Media::SoundPlayer^ soundPlayer = gcnew System::Media::SoundPlayer();
-               soundPlayer->SoundLocation = "flagClick.wav";
+               soundPlayer->SoundLocation = "flagClick.wav"; //! sound play for flagging a button
                soundPlayer->Load();
                soundPlayer->Play();
                clickedButton->IsFlagged = !clickedButton->IsFlagged;
 
-               if (clickedButton->IsFlagged) {
+               if (clickedButton->IsFlagged) { //! if the button is already flagged, it becomes unflagged and vice versa
                    Bitmap^ coveredImage = gcnew Bitmap("Slot_Uncovered_Flag.png");
                    clickedButton->Image = coveredImage;
                }
@@ -705,21 +760,24 @@ namespace MineSweeper {
 
            }
 
+           /**
+           * "reveals" the button 
+           */
            void MyForm::RevealButton(MineButton^ button) {
-               if (button->IsFlagged || button->IsRevealed) {
+               if (button->IsFlagged || button->IsRevealed){ //! the method works only if the button is not already revealed (or flagged)
                    return;
                }
               
-               if (button->AdjacentMines > 0)
+               if (button->AdjacentMines > 0) //! if there are adjacent mines, shows their count
                {
                    button->Text = button->AdjacentMines.ToString();
                }
 
                button->IsRevealed = true;
-               button->DisableButton();
+               button->DisableButton(); //! disables the button (can't be clicked more than once)
                button->Font = gcnew System::Drawing::Font(L"a_Rewinder", 15, System::Drawing::FontStyle::Regular);
                button->ForeColor = System::Drawing::Color::White;
-               Bitmap^ uncoveredImage = gcnew Bitmap("Slot_Uncovered.png");
+               Bitmap^ uncoveredImage = gcnew Bitmap("Slot_Uncovered.png"); //! changes the image on the button
                button->Image = uncoveredImage;
 
 
@@ -728,11 +786,11 @@ namespace MineSweeper {
                }
 
                Random^ rand = gcnew Random();                  
-               int maxAmountOfFieldsToBeRevealed = rand->Next(0, mineField->GetNumRows());
+               int maxAmountOfFieldsToBeRevealed = rand->Next(0, (mineField->GetNumRows()+mineField->GetNumCols())/4); 
 
                int currentlyRevealedFields = 0;
 
-               for (int i = -1; i <= 1; ++i) {
+               for (int i = -1; i <= 1; ++i) { //! reveals a random number of neighboring non-mine buttons via recursion
                    for (int j = -1; j <= 1; ++j) {
                        if (i == 0 && j == 0) continue;
 
@@ -747,7 +805,9 @@ namespace MineSweeper {
                }
 
            }
-
+           /**
+           * generates a grid with the desired numbers of rows, columns and mines, as long as the desired input is valid
+           */
            void MyForm::GenerateCustomFieldButton_Click(Object^ sender, EventArgs^ e) {
                Button^ button = safe_cast<Button^>(sender);
                button->Font = gcnew System::Drawing::Font("Arial", 106);
@@ -769,7 +829,9 @@ namespace MineSweeper {
                    GenerateMatrixOfButtons(numRows, numCols, numBombs, nullptr, nullptr, nullptr);
                }
            }
-
+           /**
+           * checks if all the non-mine fields are uncovered
+           */
            bool MyForm::CheckWin() {
                int revealedButtons = 0;
                for (int i = 0; i < mineField->GetNumRows(); ++i) {
@@ -784,6 +846,9 @@ namespace MineSweeper {
                return revealedButtons == (mineField->GetNumRows() * mineField->GetNumCols()) - mineField->GetNumBombs();
            }
 
+           /**
+           * ends the game as a win or as a loss
+           */
            void MyForm::EndGame(bool isWin) {
                gameTimer->Stop();
                if (isWin) {
@@ -819,43 +884,50 @@ namespace MineSweeper {
                        }
                    }
                }
+               gameStats->bestTime = ParseTimeToSeconds(elapsedTimeLabel->Text);
                gameStats->winPercentage = (double)gameStats->gamesWon / gameStats->gamesPlayed * 100;
-               UpdateStatisticLabels(gameStats);
+               UpdateStatisticLabels(gameStats); //! changes the statistics depending on the last played game status
                SaveStatistics(gameStats);
 
            }
 
-    private: void HintClick(Object^ sender, EventArgs^ e) {
-        bool found = false;
-        int x, y;
-        bool containsEnabledButtons = false;
-        for (int i = 0; i < mineField->GetNumRows(); i++) {
-            for (int j = 0; j < mineField->GetNumCols(); j++) {
-                if (!mineField->GetButton(i, j)->IsDisabled) containsEnabledButtons = true;
-            }
-        }
-        if (!containsEnabledButtons) return;
+           /**
+           * a "hint" to the player - acts like a left click on a random non-mine button
+           */
+            void HintClick(Object^ sender, EventArgs^ e) {
+                bool found = false;
+                int x, y;
+                bool containsEnabledButtons = false;
+                for (int i = 0; i < mineField->GetNumRows(); i++) {
+                    for (int j = 0; j < mineField->GetNumCols(); j++) {
+                        if (!mineField->GetButton(i, j)->IsDisabled) containsEnabledButtons = true;
+                    }
+                }
+                if (!containsEnabledButtons) return;
 
-        Random^ rand = gcnew Random();
+                Random^ rand = gcnew Random();
 
-        while (!found) {
-            x = rand->Next(0, mineField->GetNumRows());
-            y = rand->Next(0, mineField->GetNumCols());
+                while (!found) {
+                    x = rand->Next(0, mineField->GetNumRows());
+                    y = rand->Next(0, mineField->GetNumCols());
 
-            if (!mineField->GetButton(x, y)->IsMine && !mineField->GetButton(x, y)->IsFlagged && !mineField->GetButton(x, y)->IsRevealed) {
-                found = true;
-            }
-        }
+                    if (!mineField->GetButton(x, y)->IsMine && !mineField->GetButton(x, y)->IsFlagged && !mineField->GetButton(x, y)->IsRevealed) {
+                        found = true;
+                    }
+                }
 
-        RevealButton(mineField->GetButton(x, y));
+                RevealButton(mineField->GetButton(x, y));
 
-        if (CheckWin()) {
-            EndGame(true);
-        }
+                if (CheckWin()) {
+                    EndGame(true);
+                }
         
-    }
+            }
 
-        
+           /**
+           * loads a saved game from a .txt file 
+           * @throws "Error loading the game state" if an error occurs during loading the game state
+           */
            void MyForm::LoadGameState(Object^ sender, EventArgs^ e) {
                StreamReader^ sr = nullptr;
                try {
@@ -893,9 +965,17 @@ namespace MineSweeper {
                }
            }
 
+           /**
+           * saves the current game along with its state in a .txt file - containing data about whether the current button is revealed, is a mine, or is flagged
+           * @throws "Error saving the game state" if an error occurs during loading the game state
+           */
            void MyForm::SaveGameState(Object^ sender, EventArgs^ e) {
                StreamWriter^ sw = nullptr;
                try {
+                   if (mineField->AllButtonsAreDisabled()) {
+                       MessageBox::Show("A finished game can't be saved!");
+                       return;
+                   }
                    sw = gcnew StreamWriter("gamestate.txt");
 
                    sw->WriteLine(mineField->GetNumRows());
@@ -921,7 +1001,19 @@ namespace MineSweeper {
                    }
                }
            }
-
+           /**
+           * loads the game statistics from a .txt file 
+           * the following statistics are kept track on:
+           * best time (for a win)
+           * total games played
+           * total games won
+           * total games lost
+           * win percentage
+           * longest win streak
+           * longest loss streak
+           * current streak (whether it's a loss or a win one)
+           * @throws "Unable to open statistics.txt for reading" if an error occurs during reading the file
+           */
            GameStatistics^ LoadStatistics() {
                GameStatistics^ stats = gcnew GameStatistics();
                try {
@@ -941,6 +1033,9 @@ namespace MineSweeper {
                return stats;
            }
 
+           /**
+           * saves the game statistics in a .txt file
+           */
            void SaveStatistics(GameStatistics^ stats) {
                try {
                    StreamWriter^ outFile = gcnew StreamWriter("statistics.txt");
@@ -957,7 +1052,9 @@ namespace MineSweeper {
                    MessageBox::Show("Unable to open statistics.txt for writing: " + ex->Message);
                }
            }
-
+           /**
+           * updates the label (in the interface) with the current game statistics
+           */
            void UpdateStatisticLabels(GameStatistics^ stats) {
                lblBestTime->Text = "Best Time: " + stats->bestTimeFormatted();
                lblGamesPlayed->Text = "Games Played: " + stats->gamesPlayed;
@@ -967,7 +1064,9 @@ namespace MineSweeper {
                lblLongestLoseStreak->Text = "Longest Lose Streak: " + stats->longestLoseStreak;
                lblCurrentStreak->Text = "Current Streak: " + stats->currentStreak;
            }
-
+           /**
+           * changes the time passed each second, while a game is played
+           */
            void gameTimer_Tick(System::Object^ sender, System::EventArgs^ e) { //chatgpt
                elapsedTimeInSeconds++;
                int hours = elapsedTimeInSeconds / 3600;
@@ -981,8 +1080,24 @@ namespace MineSweeper {
                btnExit->PerformClick();
            }
 
+           /**
+           * closes the form
+           */
            void ExitButton_Click(System::Object^ sender, System::EventArgs^ e) {
                this->Close();
+           }
+
+           /**
+           * parses the timer's "HH:mm:ss" format to seconds (integer)
+           */
+           int ParseTimeToSeconds(String^ timeStr) {
+               TimeSpan timeSpan;
+               if (TimeSpan::TryParse(timeStr, timeSpan)) {
+                   return (int)timeSpan.TotalSeconds;
+               }
+               else {
+                   throw gcnew FormatException("Invalid time format. Please use HH:MM:SS format.");
+               }
            }
 
 };
