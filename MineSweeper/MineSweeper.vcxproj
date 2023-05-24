@@ -140,9 +140,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MyResources.resx" />
   </ItemGroup>
-  <ItemGroup>
-    <Media Include="..\x64\Debug\fieldClick.wav" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

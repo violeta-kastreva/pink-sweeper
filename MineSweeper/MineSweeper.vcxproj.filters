@@ -44,9 +44,4 @@
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Media Include="..\x64\Debug\fieldClick.wav">
-      <Filter>Resource Files</Filter>
-    </Media>
-  </ItemGroup>
 </Project>
