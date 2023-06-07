@@ -945,9 +945,9 @@ namespace MineSweeper {
                    int numCols = Int32::Parse(sr->ReadLine());
                    int numBombs = Int32::Parse(sr->ReadLine());
 
-                   array < array < bool >^ >^ mineData = gcnew array < array < bool >^ >(numRows);
-                   array < array < bool >^ >^ revealedData = gcnew array < array < bool >^ >(numRows);
-                   array < array < bool >^ >^ flaggedData = gcnew array < array < bool >^ >(numRows);
+                   array < array <bool>^ >^ mineData = gcnew array < array <bool>^ >(numRows);
+                   array < array <bool>^ >^ revealedData = gcnew array < array <bool>^ >(numRows);
+                   array < array <bool>^ >^ flaggedData = gcnew array < array <bool>^ >(numRows);
                    for (int i = 0; i < numRows; ++i) {
                        String^ row = sr->ReadLine();
                        mineData[i] = gcnew array < bool >(numCols);
